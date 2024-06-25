@@ -7,11 +7,13 @@ const App=()=>{
 
     useEffect(()=>{
         const loginData=JSON.parse(localStorage.getItem('loginDetails'))
-        if(!loginData){
+        if(!(loginData&&loginData.loginStatus)){
             const loginDetails={
                 loginStatus:false
               }
               localStorage.setItem('loginDetails',JSON.stringify(loginDetails))
+        }else{
+            setIsLogin(true)
         }
     },[isLogin])
 
