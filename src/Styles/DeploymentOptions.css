@@ -1,0 +1,88 @@
+/* DeploymentOptions.css */
+
+.container {
+  display: flex;
+  justify-content: center; /* Center contents horizontally */
+  align-items: center; /* Center contents vertically */
+  min-height: 100vh; /* Adjust height as needed */
+  background-color: #f0f0f0; /* Light background color */
+}
+
+.main-content {
+  text-align: center; /* Center text */
+}
+
+h1 {
+  color: #333333; /* Dark text color */
+  font-size: 2rem; /* Larger font size for heading */
+  margin-bottom: 60px; /* Space below heading */
+}
+
+.options-container {
+  display: flex;
+  justify-content: center; /* Center options horizontally */
+  margin-bottom: 20px; /* Space below options */
+}
+
+.option-box {
+  width: 200px; /* Reduced width of each option box */
+  height: 40px; /* Reduced height of each option box */
+  border: 1px solid #ccc; /* Gray border */
+  border-radius: 4px; /* Rounded corners */
+  padding: 10px; /* Reduced padding inside the box */
+  margin-bottom: 50px; 
+  margin-right: 20px; /* Margin between option boxes */
+  background-color: #ffffff; /* White background */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
+  cursor: pointer; /* Change cursor on hover */
+  transition: transform 0.2s ease, background-color 0.2s ease; /* Smooth scaling and background color transition */
+  display: flex; /* Use flexbox for centering */
+  justify-content: center; /* Center content horizontally */
+  align-items: center; /* Center content vertically */
+}
+
+.option-box.selected {
+  background-color: #90EE90; /* Light blue background color */
+  color: #007BFF; /* Blue text color */
+  border: 1px solid #ffffff; /* Blue border */
+}
+
+.option-box:hover {
+  transform: scale(1.05); /* Scale up slightly on hover */
+}
+
+.option {
+  margin-bottom: 15px; /* Space between options */
+}
+
+.option-content {
+  display: flex;
+  justify-content: center; /* Center content horizontally */
+  align-items: center; /* Center content vertically */
+}
+
+.option-text {
+  font-size: 1rem; /* Reduced font size for option text */
+  color: #333333; /* Dark text color */
+}
+
+.nextButton {
+  margin-top: 20px; /* Space above next button */
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007BFF;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.nextButton:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.nextButton:not(:disabled):hover {
+  background-color: #0056b3;
+}

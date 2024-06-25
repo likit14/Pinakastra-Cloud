@@ -104,7 +104,7 @@ const Signup = () => {
             <p>Your account name is: <strong>{registeredUser}</strong></p>
             <p>Your user ID is: <strong>{userId}</strong></p>
             <div className="login-prompt">
-              <p>Please <Link to="/login">login</Link> to continue</p>
+              <p>Please <Link to="/">login</Link> to continue</p>
             </div>
           </div>
         ) : (

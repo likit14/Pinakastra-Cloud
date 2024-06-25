@@ -14,5 +14,9 @@ export const router=createBrowserRouter([
     },{
         path:'/signup',
         element:<Signup/>
+    },
+    {
+        path: '/*',
+        element: <ErrorPageContainer /> // Fallback for any undefined routes
     }
 ])

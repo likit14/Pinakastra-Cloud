@@ -16,8 +16,8 @@ export class ErrorPageContainer extends Component {
                   <div className="contentBox">
                     <h3 className="h2">Something Went Wrong..!</h3>
                     <p>The page Not Available!</p>
-                    <a href={"/deepoption"} className="link_404" onClick={this.goHome}>
-                      Go to Home
+                    <a href={"/"} className="link_404" onClick={this.goHome}>
+                      Go Back
                     </a>
                   </div>
                 </div>

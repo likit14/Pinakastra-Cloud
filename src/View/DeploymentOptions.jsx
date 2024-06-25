@@ -1,43 +1,58 @@
+// DeploymentOptions.js
 import React, { useState } from 'react';
 import Sidebar from '../Components/sidebar';
+import '../Styles/DeploymentOptions.css'; // Import the CSS file
+import Footer from '../Components/footer';
+
 const DeploymentOptions = () => {
   const [selectedOption, setSelectedOption] = useState(null);
 
-  const handleOptionChange = (event) => {
-    setSelectedOption(event.target.value);
+  const handleOptionClick = (option) => {
+    setSelectedOption(option === selectedOption ? null : option); // Toggle selection
+  };
+
+  const handleNextClick = () => {
+    // Handle next button click action here
+    console.log("Next button clicked");
   };
 
   return (
-    <Sidebar>
     <div className="container">
-      <h1>Deployment Options</h1>
-      <div className="options">
-        <div className="option">
-          <input
-            type="radio"
-            id="standalone"
-            name="deployment"
-            value="Standalone Cloud Setup"
-            checked={selectedOption === "Standalone Cloud Setup"}
-            onChange={handleOptionChange}
-          />
-          <label htmlFor="standalone">Standalone Cloud Setup</label>
+      <Sidebar>
+        <div className="sidebar-content">
+          {/* Add sidebar-specific content here if needed */}
         </div>
-        <div className="option">
-          <input
-            type="radio"
-            id="distributed"
-            name="deployment"
-            value="Distributed Cloud Setup"
-            checked={selectedOption === "Distributed Cloud Setup"}
-            onChange={handleOptionChange}
-          />
-          <label htmlFor="distributed">Distributed Cloud Setup</label>
+      </Sidebar>
+      <div className="main-content">
+        <h1>Deployment Options 🚀</h1>
+        <div className="options-container">
+          <div
+            className={`option-box ${selectedOption === "Standalone Cloud Setup" ? 'selected' : ''}`}
+            onClick={() => handleOptionClick("Standalone Cloud Setup")}
+          >
+            <div className="option">
+              <div className="option-content">
+                <div className="option-text">Standalone Cloud Setup</div>
+              </div>
+            </div>
+          </div>
+          <div
+            className={`option-box ${selectedOption === "Distributed Cloud Setup" ? 'selected' : ''}`}
+            onClick={() => handleOptionClick("Distributed Cloud Setup")}
+          >
+            <div className="option">
+              <div className="option-content">
+                <div className="option-text">Distributed Cloud Setup</div>
+              </div>
+            </div>
+          </div>
         </div>
+        <button className="nextButton" onClick={handleNextClick} disabled={!selectedOption}>
+          Next
+        </button>
       </div>
-      {selectedOption && <p>Selected Option: {selectedOption}</p>}
+      <Footer />
     </div>
-    </Sidebar>
   );
 };
 

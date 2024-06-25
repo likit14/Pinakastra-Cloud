@@ -1,213 +1,46 @@
-import React from "react";
-import clsx from "clsx";
-import { makeStyles } from "@material-ui/core/styles";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Drawer from "@material-ui/core/Drawer";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
-import Badge from "@material-ui/core/Badge";
-import Container from "@material-ui/core/Container";
-import Divider from "@material-ui/core/Divider";
-import CloudIcon from "@material-ui/icons/Cloud";
-import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
-import CentralCloud from "@material-ui/icons/CloudCircle";
-import MenuIcon from "@material-ui/icons/Menu";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import DashboardIcon from "@material-ui/icons/Dashboard";
-import BarChartIcon from "@material-ui/icons/BarChart";
-import { Outlet, useNavigate } from "react-router-dom";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import img1 from '../Images/logo.png';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTachometerAlt, faArrowUp, faArrowDown, faCog } from '@fortawesome/free-solid-svg-icons';
+import '../Styles/Sidebar.css'; // Ensure to have Sidebar.css for styling
 
-function ListItemLink(props) {
-  return <ListItem button component="a" {...props} />;
-}
-
-const drawerWidth = 240;
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-  },
-  toolbar: {
-    paddingRight: 24, // keep right padding when drawer closed
-  },
-  toolbarIcon: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    padding: "0 8px",
-    ...theme.mixins.toolbar,
-  },
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    backgroundColor: 'rgba(25,119,183,255)', // Change the color here
-  },
-  appBarShift: {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  menuButton: {
-    marginRight: 36,
-  },
-  menuButtonHidden: {
-    display: "none",
-  },
-  title: {
-    flexGrow: 1,
-  },
-  drawerPaper: {
-    position: "fixed", // Change to fixed
-    whiteSpace: "nowrap",
-    width: drawerWidth,
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  drawerPaperClose: {
-    overflowX: "hidden",
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    width: theme.spacing(7),
-    [theme.breakpoints.up("sm")]: {
-      width: theme.spacing(9),
-    },
-  },
-  appBarSpacer: theme.mixins.toolbar,
-  content: {
-    display: "flex",
-    flexDirection: "column",
-    flexGrow: 1,
-    height: "100vh",
-    marginLeft: drawerWidth, // Ensure content starts after the drawer
-    overflow: "auto",
-  },
-  container: {
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4),
-  },
-  listItem: {
-    marginTop: theme.spacing(1), // Adjust the top margin for each ListItem
-  },
-}));
-
-export default function App() {
-  const classes = useStyles();
-  const [open, setOpen] = React.useState(true);
-  const navigate = useNavigate();
-
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
-
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate("/");
-    window.location.reload();
-  };
+const Sidebar = ({ children }) => {
 
   return (
-    <div className={classes.root}>
-      <CssBaseline />
-      <AppBar
-        position="fixed"
-        className={clsx(classes.appBar, open && classes.appBarShift)}
-      >
-        <Toolbar className={classes.toolbar}>
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            component="h1"
-            variant="h6"
-            color="inherit"
-            noWrap
-            className={classes.title}
-          >
-            Home
-          </Typography>
-          <IconButton color="inherit" onClick={handleLogout}>
-            <Badge color="secondary">
-              <PowerSettingsNewIcon />
-            </Badge>
-          </IconButton>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        variant="permanent"
-        classes={{
-          paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
-        }}
-        open={open}
-      >
-        <div className={classes.toolbarIcon}>
-          <IconButton onClick={handleDrawerClose}>
-            <ChevronLeftIcon />
-          </IconButton>
-        </div>
+      <aside className="sidebar">
+      <div className="sidebar-logo">
 
-        {/* Your logo component */}
-        {/* <img src={Logo} alt="Logo" /> */}
-        <Divider />
-        <List>
-          <ListItemLink href="/*" className={classes.listItem}>
-            <ListItemIcon>
-              <DashboardIcon />
-            </ListItemIcon>
-            <ListItemText primary="Dashboard" />
-          </ListItemLink>
-          <ListItemLink href="/*" className={classes.listItem}>
-            <ListItemIcon>
-              <CloudIcon />
-            </ListItemIcon>
-            <ListItemText primary="Cloud Status" />
-          </ListItemLink>
-          <ListItemLink href="/*" className={classes.listItem}>
-            <ListItemIcon>
-              <CentralCloud />
-            </ListItemIcon>
-            <ListItemText primary="Central Cloud" />
-          </ListItemLink>
-          <ListItemLink href="/*" className={classes.listItem}>
-            <ListItemIcon>
-              <BarChartIcon />
-            </ListItemIcon>
-            <ListItemText primary="Sub Clouds" />
-          </ListItemLink>
-        </List>
-        <Divider />
-      </Drawer>
-      <main className={classes.content}>
-        <div className={classes.appBarSpacer} />
-        <Container maxWidth="lg" className={classes.container}>
-          <Outlet />
-        </Container>
-      </main>
-    </div>
-  );
-}
+        <img src={img1} alt="Logo" className="logo-image" />
+      </div>
+      <ul className="sidebar-menu">
+        <li>
+          <Link to="/dashboard">
+            <FontAwesomeIcon icon={faTachometerAlt} />
+            <span className="menu-text">Dashboard</span>
+          </Link>
+        </li>
+        <li>
+          <Link to="/scaleup">
+            <FontAwesomeIcon icon={faArrowUp} />
+            <span className="menu-text">Scale Up</span>
+          </Link>
+        </li>
+        <li>
+          <Link to="/scaledown">
+            <FontAwesomeIcon icon={faArrowDown} />
+            <span className="menu-text">Scale Down</span>
+          </Link>
+        </li>
+        <li>
+          <Link to="/administration">
+            <FontAwesomeIcon icon={faCog} />
+            <span className="menu-text">Administration</span>
+          </Link>
+        </li>
+      </ul>
+    </aside>
+    );
+};
+
+export default Sidebar;
