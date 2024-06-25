@@ -6,7 +6,8 @@ import Footer from '../Components/footerforlogin';
 import '../Styles/Login.css';
 import { Link,useNavigate } from 'react-router-dom';
 
-const Login = () => {
+const Login = (props) => {
+  const {checkLogin}=props
   const navigate=useNavigate()
   const [formData, setFormData] = useState({
     id: '',
@@ -36,6 +37,7 @@ const Login = () => {
           loginStatus:true
         }
         localStorage.setItem('loginDetails',JSON.stringify(loginDetails))
+        checkLogin(true)
       } else {
         setError('Invalid credentials');
       }
