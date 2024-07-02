@@ -71,3 +71,49 @@
   .sidebar .sidebar-menu li a .menu-text {
     margin-left: 35px; /* Adjust the margin to create space between icon and text */
   }
+
+  .user-profile {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    align-items: center;
+    background-color: #34495e;
+    color: #ecf0f1;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .profile-icon {
+    margin-right: 10px;
+  }
+  
+  .user-name {
+    font-size: 16px;
+  }
+  
+  .profile-menu {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background-color: #34495e;
+    border: 1px solid #2c3e50;
+    border-radius: 5px;
+    padding: 10px;
+    z-index: 1000;
+  }
+  
+  .logout-button {
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    color: #ecf0f1;
+    cursor: pointer;
+    padding: 1px 10px;
+  }
+  
+  .logout-button:hover {
+    background-color: #2980b9;
+  }

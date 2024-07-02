@@ -34,7 +34,8 @@ const Login = (props) => {
       const response = await axios.post('http://localhost:5000/api/login', { id, companyName, password });
       if (response.data.success) {
         const loginDetails={
-          loginStatus:true
+          loginStatus:true,
+          data:response.data.data
         }
         localStorage.setItem('loginDetails',JSON.stringify(loginDetails))
         checkLogin(true)
