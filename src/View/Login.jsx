@@ -39,6 +39,7 @@ const Login = (props) => {
         }
         localStorage.setItem('loginDetails',JSON.stringify(loginDetails))
         checkLogin(true)
+        console.log(response)
       } else {
         setError('Invalid credentials');
       }
@@ -47,6 +48,7 @@ const Login = (props) => {
       setError('Invalid credentials');
     }
   };
+  
 
   return (
     <>

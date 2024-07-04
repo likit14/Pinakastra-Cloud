@@ -1,5 +1,3 @@
-/* DeploymentOptions.css */
-
 .container {
   display: flex;
   justify-content: center; /* Center contents horizontally */
@@ -26,39 +24,56 @@ h1 {
 
 .option-box {
   width: 200px; /* Reduced width of each option box */
-  height: 40px; /* Reduced height of each option box */
+  height: 300px; /* Increased height to fit back content */
+  perspective: 1000px; /* Perspective for 3D effect */
+  margin-bottom: 50px; 
+  margin-right: 40px; /* Margin between option boxes */
+  margin-left: 40px; /* Margin between option boxes */
+  cursor: pointer; /* Change cursor on hover */
+}
+
+.option {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  position: relative;
+}
+
+.option-box:hover .option {
+  transform: rotateY(180deg);
+}
+
+.option-content {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
   border: 1px solid #ccc; /* Gray border */
   border-radius: 4px; /* Rounded corners */
   padding: 10px; /* Reduced padding inside the box */
-  margin-bottom: 50px; 
-  margin-right: 20px; /* Margin between option boxes */
   background-color: #ffffff; /* White background */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
-  cursor: pointer; /* Change cursor on hover */
-  transition: transform 0.2s ease, background-color 0.2s ease; /* Smooth scaling and background color transition */
   display: flex; /* Use flexbox for centering */
   justify-content: center; /* Center content horizontally */
   align-items: center; /* Center content vertically */
 }
 
+.option-content.front {
+  z-index: 2; /* Ensure front is above back */
+}
+
+.option-content.back {
+  transform: rotateY(180deg);
+  z-index: 1;
+}
+
 .option-box.selected {
-  background-color: #90EE90; /* Light blue background color */
-  color: #007BFF; /* Blue text color */
-  border: 1px solid #ffffff; /* Blue border */
+  background-color: transparent; /* Transparent background */
 }
 
-.option-box:hover {
+.option-box:hover .option-content.front {
   transform: scale(1.05); /* Scale up slightly on hover */
-}
-
-.option {
-  margin-bottom: 15px; /* Space between options */
-}
-
-.option-content {
-  display: flex;
-  justify-content: center; /* Center content horizontally */
-  align-items: center; /* Center content vertically */
 }
 
 .option-text {
@@ -85,4 +100,9 @@ h1 {
 
 .nextButton:not(:disabled):hover {
   background-color: #0056b3;
+}
+
+/* Optional: Adjust selected option background */
+.option-box.selected .option-content {
+  background-color: #90EE90; /* background for selected option */
 }

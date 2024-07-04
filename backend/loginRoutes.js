@@ -12,7 +12,7 @@ router.post("/login", (req, res) => {
       console.error("Error fetching user from database:", err);
       return res.status(500).send("Error logging in");
     }
-    if (results) {
+    if (results[0]) {
       // Convert the result to a JavaScript object
       const userData = results[0]; // Assuming you expect a single user
       return res
