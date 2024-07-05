@@ -21,7 +21,7 @@ const Sidebar = ({ children }) => {
 
   const handleLogout = () => {
     localStorage.clear(); // Clear all local storage
-    navigate('/'); // Redirect to login page
+    navigate('/signup'); // Redirect to login page
   };
 
   return (

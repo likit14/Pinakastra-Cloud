@@ -160,7 +160,7 @@ const Signup = () => {
         {!registrationSuccess && (
           <div className="login-prompt">
             <p>or</p>
-            <a onClick={()=>handleNavigate()}>Already Registered?/Login</a>
+            <a onClick={()=>handleNavigate()}><Link to='/'>Already Registered?/Login</Link></a>
           </div>
         )}
       </div>
