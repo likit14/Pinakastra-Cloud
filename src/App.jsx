@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import DeploymentOptions from './View/DeploymentOptions'
+import { Outlet } from "react-router-dom";
 import Login from './View/Login'
 
 const App=()=>{
@@ -23,7 +23,7 @@ const App=()=>{
 
     return(
         <>{
-            isLogin?<DeploymentOptions/>:<Login checkLogin={checkLogin}/>
+            isLogin?<Outlet />:<Login checkLogin={checkLogin}/>
         }
         </>
     )

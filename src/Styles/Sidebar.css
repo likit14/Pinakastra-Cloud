@@ -1,117 +1,116 @@
+/* sidebar.css */
+
 .sidebar {
-    width: 250px;
-    height: 100%;
-    background-color: #22262b;
-    color: #ffffff;
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 250px; /* Adjust width as needed */
-    height: 100%; /* Full height of viewport */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 20px;
-    box-shadow: 1.5px 0 2px rgba(0, 0, 0, 0.5);
-    z-index: 100; /* Ensure sidebar is above other content */
-    transition: transform 0.3s ease;
-  }
-  
+  width: 250px;
+  height: 100%;
+  background-color: #22262b;
+  color: #ffffff;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+  box-shadow: 1.5px 0 2px rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  transition: transform 0.3s ease;
+}
+
 .sidebar-logo {
   text-align: center;
   margin-bottom: 20px;
 }
 
-  .logo-image {
-    max-width: 210px; /* Adjust the maximum width of the logo */
-    max-height: 75px; /* Adjust the maximum height of the logo */
-  }
-  
-  .sidebar-menu {
-    list-style-type: none;
-    padding: 0;
-    width: 100%;
-  }
-  
-  .sidebar .sidebar-menu li {
-    padding: 7px 25px; /* Adjust padding to increase space between menu items */
-    transition: border-radius 0.3s ease-in-out; /* Smooth transition for border-radius */
-  }
-  
-  .sidebar-menu li {
-    margin-bottom: 10px;
-  }
-  
-  .sidebar-menu li a {
-    display: flex;
-    align-items: center;
-    padding: 12px;
-    color: inherit;
-    text-decoration: none;
-    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for background color and text color */
-    padding: 8px; /* Added padding for text area */
-  }
-  
-  .sidebar-menu li a:hover {
-    background-color: #1f2f3f; /* Adjust background color on hover */
-    border-radius: 10px; /* Rounded corners */
-    color: #ffffff; /* Maintain text color on hover */
-  }
-  
-  .sidebar-menu li a i {
-    margin-right: 10px;
-    font-size: 18px;
-  }
-  
-  .sidebar-menu li a span {
-    font-size: 18px;
-  }
-  
-  .sidebar .sidebar-menu li a .menu-text {
-    margin-left: 35px; /* Adjust the margin to create space between icon and text */
-  }
+.logo-image {
+  max-width: 210px;
+  max-height: 75px;
+}
 
-  .user-profile {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    display: flex;
-    align-items: center;
-    background-color: #34495e;
-    color: #ecf0f1;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .profile-icon {
-    margin-right: 10px;
-  }
-  
-  .user-name {
-    font-size: 16px;
-  }
-  
-  .profile-menu {
-    position: absolute;
-    top: 50px;
-    right: 0;
-    background-color: #34495e;
-    border: 1px solid #2c3e50;
-    border-radius: 5px;
-    padding: 10px;
-    z-index: 1000;
-  }
-  
-  .logout-button {
-    display: flex;
-    align-items: center;
-    background: none;
-    border: none;
-    color: #ecf0f1;
-    cursor: pointer;
-    padding: 0px 7px;
-  }
-  
- 
+.sidebar-menu {
+  list-style-type: none;
+  padding: 0;
+  width: 100%;
+}
+
+.sidebar .sidebar-menu li {
+  padding: 7px 25px;
+  transition: border-radius 0.3s ease-in-out;
+}
+
+.sidebar-menu li {
+  margin-bottom: 10px;
+}
+
+.sidebar-menu li a {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  color: inherit;
+  text-decoration: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  padding: 8px;
+}
+
+.sidebar-menu li a:hover {
+  background-color: #1f2f3f;
+  border-radius: 10px;
+  color: #ffffff;
+}
+
+.sidebar-menu li a i {
+  margin-right: 10px;
+  font-size: 18px;
+}
+
+.sidebar-menu li a span {
+  font-size: 18px;
+}
+
+.sidebar .sidebar-menu li a .menu-text {
+  margin-left: 35px;
+}
+
+.user-profile {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  background-color: #34495e;
+  color: #ecf0f1;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.profile-icon {
+  margin-right: 10px;
+}
+
+.user-name {
+  font-size: 16px;
+}
+
+.profile-menu {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background-color: #34495e;
+  border: 1px solid #2c3e50;
+  border-radius: 5px;
+  padding: 10px;
+  z-index: 1000;
+}
+
+.logout-button {
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  color: #ecf0f1;
+  cursor: pointer;
+  padding: 0px 7px;
+}
+

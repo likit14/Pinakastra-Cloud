@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { Navigate } from 'react-router-dom'; // Import Navigate for conditional navigation
 import Sidebar from '../Components/sidebar';
 import '../Styles/DeploymentOptions.css'; // Import the CSS file
 import Footer from '../Components/footer';
 
 const DeploymentOptions = () => {
   const [selectedOption, setSelectedOption] = useState(null);
+  const [redirectTo, setRedirectTo] = useState(false); // State to handle navigation
 
   const handleOptionClick = (option) => {
     setSelectedOption(option === selectedOption ? null : option); // Toggle selection
@@ -13,15 +15,21 @@ const DeploymentOptions = () => {
   const handleNextClick = () => {
     // Handle next button click action here
     console.log("Next button clicked");
+    // Determine where to navigate based on selectedOption
+    if (selectedOption === "Standalone Cloud Setup") {
+      setRedirectTo('/discoveredmachines'); // Redirect to Discoveredmachines
+    } else if (selectedOption === "Distributed Cloud Setup") {
+      setRedirectTo('/error'); // Redirect to error page
+    }
   };
+
+  // Render Navigate component if redirectTo is true
+  if (redirectTo) {
+    return <Navigate to={redirectTo} />;
+  }
 
   return (
     <div className="container">
-      <Sidebar>
-        <div className="sidebar-content">
-          {/* Add sidebar-specific content here if needed */}
-        </div>
-      </Sidebar>
       <div className="main-content">
         {/* Add Google Fonts import */}
         <style>
@@ -30,7 +38,7 @@ const DeploymentOptions = () => {
           `}
         </style>
 
-        <h1 >Deployment Options 🚀</h1>
+        <h1>Deployment Options 🚀</h1>
         <div className="options-container">
           <div
             className={`option-box ${selectedOption === "Standalone Cloud Setup" ? 'selected' : ''}`}
@@ -38,7 +46,7 @@ const DeploymentOptions = () => {
           >
             <div className="option">
               <div className="option-content front">
-                <div  className="option-text"><b>Standalone Cloud Setup</b></div>
+                <div className="option-text"><b>Standalone Cloud Setup</b></div>
               </div>
               <div className="option-content back">
                 <div className="option-text"><strong>A self-contained cloud infrastructure managed by a single node.</strong></div>
@@ -63,6 +71,7 @@ const DeploymentOptions = () => {
           Next
         </button>
       </div>
+      <Sidebar />
       <Footer />
     </div>
   );
