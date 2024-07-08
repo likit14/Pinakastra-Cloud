@@ -1,18 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from '../Components/sidebar';
 import Footer from '../Components/footer';
-
 import '../Styles/Datatable.css'; // Import your CSS file for styling
 
 const DataTable = () => {
-    // Example data, replace with actual data fetching logic
+    const [data, setData] = useState([]);
     const [selectedRows, setSelectedRows] = useState([]);
 
-    const data = [
-        { id: 1, slNo: 1, ipAddress: '192.168.1.1', hostname: 'example.com', deploymentSection: 'Deploy' },
-        { id: 2, slNo: 2, ipAddress: '192.168.1.2', hostname: 'example.net', deploymentSection: 'Deploy' },
-        // Add more data as needed
-    ];
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const fetchData = async () => {
+        try {
+            // Replace 'http://your-python-backend-url/api/data' with your actual API endpoint
+            const response = await fetch('http://your-python-backend-url/api/data');
+            if (!response.ok) {
+                throw new Error('Failed to fetch data');
+            }
+            const jsonData = await response.json();
+            setData(jsonData);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
 
     const handleCheckboxChange = (event, row) => {
         const isChecked = event.target.checked;
@@ -23,66 +34,81 @@ const DataTable = () => {
         }
     };
 
-    const handleValidate = (rowData) => {
-        // Example: Simulate validation
-        setTimeout(() => {
-            const updatedData = data.map(item => {
-                if (item.id === rowData.id) {
-                    return { ...item, validationStatus: 'PASS' }; // Replace with actual validation result
-                }
-                return item;
+    const handleValidate = async (rowData) => {
+        try {
+            // Replace 'http://your-python-backend-url/api/validate' with your validation endpoint
+            const response = await fetch('http://your-python-backend-url/api/validate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(rowData),
             });
-            console.log('Validation complete:', updatedData);
-            // Update state or perform further actions based on validation
-        }, 1000); // Simulate API delay
+            if (!response.ok) {
+                throw new Error('Validation failed');
+            }
+            const updatedData = await response.json();
+            setData(updatedData); // Assuming the backend returns updated data after validation
+        } catch (error) {
+            console.error('Error validating:', error);
+        }
     };
 
-    const handleDeploy = () => {
-        // Example: Simulate deployment
-        console.log('Deploying:', selectedRows);
-        // Implement actual deployment logic here, e.g., call an API
+    const handleDeploy = async () => {
+        try {
+            // Replace 'http://your-python-backend-url/api/deploy' with your deployment endpoint
+            const response = await fetch('http://your-python-backend-url/api/deploy', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(selectedRows),
+            });
+            if (!response.ok) {
+                throw new Error('Deployment failed');
+            }
+            console.log('Deployment successful');
+            // Implement further actions based on successful deployment
+        } catch (error) {
+            console.error('Error deploying:', error);
+        }
     };
 
     return (
         <div className="data-table-container">
-            <h1>Discovered Machines</h1>
+            <h1>Discovery Machines</h1>
             <div className="container">
-                <div className="data-table-container">
-                    {/* <h2>Data Table</h2> */}
-                    <table className="data-table">
-                        <thead>
-                            <tr>
-                                <th>Sl No.</th>
-                                <th>IP Address</th>
-                                <th>Hostname</th>
-                                <th>Designating<br />Validation</th>
-                                <th>Result</th>
-                                <th>Deployment<br />Section</th>
+                <table className="data-table">
+                    <thead>
+                        <tr>
+                            <th>Sl No.</th>
+                            <th>IP Address</th>
+                            <th>Hostname</th>
+                            <th>Designating<br />Validation</th>
+                            <th>Result</th>
+                            <th>Deployment<br />Section</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {data.map((row, index) => (
+                            <tr key={index}>
+                                <td>{row.slNo}</td>
+                                <td>{row.ipAddress}</td>
+                                <td>{row.hostname}</td>
+                                <td>
+                                    <button onClick={() => handleValidate(row)}>Validate</button>
+                                </td>
+                                <td>{row.validationStatus || '-'}</td>
+                                <td>
+                                    <input type="checkbox" onChange={(event) => handleCheckboxChange(event, row)} />
+                                    {row.deploymentSection}
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {data.map((row, index) => (
-                                <tr key={index}>
-                                    <td>{row.slNo}</td>
-                                    <td>{row.ipAddress}</td>
-                                    <td>{row.hostname}</td>
-                                    <td>
-                                        <button onClick={() => handleValidate(row)}>Validate</button>
-                                    </td>
-                                    <td style={{ color: 'green', fontFamily: 'Arial, sans-serif' }}><b>PASS</b></td>
-                                    <td>
-                                        <input type="checkbox" onChange={(event) => handleCheckboxChange(event, row)} />
-                                        {row.deploymentSection}
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                        ))}
+                    </tbody>
+                </table>
                 <Sidebar />
                 <Footer />
-
-                {/* Deploy button with external CSS class */}
                 <button
                     className="button-deploy"
                     onClick={handleDeploy}
