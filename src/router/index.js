@@ -4,6 +4,7 @@ import Signup from "../View/Signup";
 import ErrorPageContainer from "../View/ErrorPageContainer";
 import DeploymentOptions from "../View/DeploymentOptions";
 import DiscoveredMachines from "../View/DiscoveredMachines";
+import DesignatedNodes from "../View/DesignatedNodes";
 export const router=createBrowserRouter([
     {
     path:'/',
@@ -17,6 +18,11 @@ export const router=createBrowserRouter([
     {
         path: '/discoveredmachines',
         element: <DiscoveredMachines/>
+    },
+    {
+        path: '/designatednodes',
+        element: <DesignatedNodes/>
+
     }
     ]
     },
