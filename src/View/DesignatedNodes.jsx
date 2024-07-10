@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Sidebar from '../Components/sidebar';
 import Footer from '../Components/footer';
 
-import '../Styles/DesignatedNodes.css'; // Import your CSS file for styling
+import '../Styles/DesignatedNodes.css';
 
-const DataTable = () => {
+const DesignatedNodes = () => {
+    const navigate = useNavigate();
     const [selectedRows, setSelectedRows] = useState([]);
     const [roles, setRoles] = useState([
         { id: 1, slNo: 1, ipAddress: '192.168.1.1', hostname: 'example.com', roles: [] },
@@ -12,24 +14,12 @@ const DataTable = () => {
         // Add more data as needed
     ]);
 
-    const [interface01, setInterface01] = useState('');
-    const [interface02, setInterface02] = useState('');
-    const [floatingIp, setFloatingIp] = useState('');
-
-    const handleCheckboxChange = (event, row) => {
+    const handleCheckboxChange = (event, row, role) => {
         const isChecked = event.target.checked;
-        if (isChecked) {
-            setSelectedRows([...selectedRows, row]);
-        } else {
-            setSelectedRows(selectedRows.filter(selectedRow => selectedRow.id !== row.id));
-        }
-    };
-
-    const handleRoleChange = (event, row, role) => {
         const updatedRoles = roles.map(item => {
             if (item.id === row.id) {
                 const rolesSet = new Set(item.roles);
-                if (event.target.checked) {
+                if (isChecked) {
                     rolesSet.add(role);
                 } else {
                     rolesSet.delete(role);
@@ -39,12 +29,17 @@ const DataTable = () => {
             return item;
         });
         setRoles(updatedRoles);
-        console.log('Roles updated:', updatedRoles);
+
+        const updatedSelectedRows = isChecked
+            ? [...selectedRows, row]
+            : selectedRows.filter(selectedRow => selectedRow.id !== row.id);
+        setSelectedRows(updatedSelectedRows);
     };
 
     const handleDeploy = () => {
         console.log('Deploying:', selectedRows);
         // Implement actual deployment logic here, e.g., call an API
+        navigate('/deploymentinfo');
     };
 
     return (
@@ -71,24 +66,26 @@ const DataTable = () => {
                                         <label>
                                             <input
                                                 type="checkbox"
-                                                checked={row.roles.includes('Control')}
-                                                onChange={(event) => handleRoleChange(event, row, 'Control')}
-                                            />
-                                            <span>Control</span>
-                                        </label>
-                                        <label>
-                                            <input
-                                                type="checkbox"
                                                 checked={row.roles.includes('Compute')}
-                                                onChange={(event) => handleRoleChange(event, row, 'Compute')}
+                                                onChange={(event) => handleCheckboxChange(event, row, 'Compute')}
                                             />
                                             <span>Compute</span>
                                         </label>
+                                        <br />
+                                        <label>
+                                            <input
+                                                type="checkbox"
+                                                checked={row.roles.includes('Control')}
+                                                onChange={(event) => handleCheckboxChange(event, row, 'Control')}
+                                            />
+                                            <span>Control</span>
+                                        </label>
+                                        <br />
                                         <label>
                                             <input
                                                 type="checkbox"
                                                 checked={row.roles.includes('Storage')}
-                                                onChange={(event) => handleRoleChange(event, row, 'Storage')}
+                                                onChange={(event) => handleCheckboxChange(event, row, 'Storage')}
                                             />
                                             <span>Storage</span>
                                         </label>
@@ -99,41 +96,9 @@ const DataTable = () => {
                     </table>
                 </div>
                 
-                {/* Text fields centered below the table */}
-                <div className="text-fields-container">
-                    <div className="text-field">
-                        <label htmlFor="interface01">INTERFACE_01:</label>
-                        <input
-                            type="text"
-                            id="interface01"
-                            value={interface01}
-                            onChange={(e) => setInterface01(e.target.value)}
-                        />
-                    </div>
-                    <div className="text-field">
-                        <label htmlFor="interface02">INTERFACE_02:</label>
-                        <input
-                            type="text"
-                            id="interface02"
-                            value={interface02}
-                            onChange={(e) => setInterface02(e.target.value)}
-                        />
-                    </div>
-                    <div className="text-field">
-                        <label htmlFor="floatingIp">FLOATING_IP:</label>
-                        <input
-                            type="text"
-                            id="floatingIp"
-                            value={floatingIp}
-                            onChange={(e) => setFloatingIp(e.target.value)}
-                        />
-                    </div>
-                </div>
-
                 <Sidebar />
                 <Footer />
 
-                {/* Deployment button */}
                 <button
                     className="button-deploy"
                     onClick={handleDeploy}
@@ -146,4 +111,4 @@ const DataTable = () => {
     );
 };
 
-export default DataTable;
+export default DesignatedNodes;
