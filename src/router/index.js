@@ -5,6 +5,7 @@ import ErrorPageContainer from "../View/ErrorPageContainer";
 import DeploymentOptions from "../View/DeploymentOptions";
 import DiscoveredMachines from "../View/DiscoveredMachines";
 import DesignatedNodes from "../View/DesignatedNodes";
+import DeploymentInfo from "../View/DeploymentInfo";
 export const router=createBrowserRouter([
     {
     path:'/',
@@ -22,7 +23,10 @@ export const router=createBrowserRouter([
     {
         path: '/designatednodes',
         element: <DesignatedNodes/>
-
+    },
+    {
+        path: '/deploymentinfo',
+        element: <DeploymentInfo/>
     }
     ]
     },

@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
 import Sidebar from '../Components/sidebar';
 import Footer from '../Components/footer';
 
 import '../Styles/DiscoveredMachines.css'; // Import your CSS file for styling
 
-const DataTable = () => {
+const DiscoveredMachines = () => {
+    const navigate = useNavigate(); // Get navigate function from useNavigate
+
     // Example data, replace with actual data fetching logic
-    const [selectedRows, setSelectedRows] = useState([]);
+    const [selectedRow, setSelectedRow] = useState(null); // Track single selected row
 
     const data = [
         { id: 1, slNo: 1, ipAddress: '192.168.1.1', hostname: 'example.com', deploymentSection: 'Deploy' },
@@ -14,12 +17,11 @@ const DataTable = () => {
         // Add more data as needed
     ];
 
-    const handleCheckboxChange = (event, row) => {
-        const isChecked = event.target.checked;
-        if (isChecked) {
-            setSelectedRows([...selectedRows, row]);
+    const handleCheckboxChange = (row) => {
+        if (selectedRow && selectedRow.id === row.id) {
+            setSelectedRow(null); // Unselect if already selected
         } else {
-            setSelectedRows(selectedRows.filter(selectedRow => selectedRow.id !== row.id));
+            setSelectedRow(row); // Select the row
         }
     };
 
@@ -39,8 +41,11 @@ const DataTable = () => {
 
     const handleDeploy = () => {
         // Example: Simulate deployment
-        console.log('Deploying:', selectedRows);
+        console.log('Deploying:', selectedRow);
         // Implement actual deployment logic here, e.g., call an API
+
+        // Navigate to '/designatednodes' after deployment using navigate
+        navigate('/designatednodes');
     };
 
     return (
@@ -48,7 +53,6 @@ const DataTable = () => {
             <h1>Discovered Machines</h1>
             <div className="container">
                 <div className="data-table-container">
-                    {/* <h2>Data Table</h2> */}
                     <table className="data-table">
                         <thead>
                             <tr>
@@ -70,9 +74,15 @@ const DataTable = () => {
                                         <button onClick={() => handleValidate(row)}>Validate</button>
                                     </td>
                                     <td style={{ color: 'green', fontFamily: 'Arial, sans-serif' }}><b>PASS</b></td>
-                                    <td>
-                                        <input type="checkbox" onChange={(event) => handleCheckboxChange(event, row)} />
-                                        {row.deploymentSection}
+                                    <td className="checkbox-column">
+                                        <label>
+                                            <input
+                                                type="checkbox"
+                                                onChange={() => handleCheckboxChange(row)}
+                                                checked={selectedRow && selectedRow.id === row.id} // Check based on selectedRow state
+                                            />
+                                            <span>{row.deploymentSection}</span>
+                                        </label>
                                     </td>
                                 </tr>
                             ))}
@@ -86,7 +96,7 @@ const DataTable = () => {
                 <button
                     className="button-deploy"
                     onClick={handleDeploy}
-                    disabled={selectedRows.length === 0}
+                    disabled={!selectedRow}
                 >
                     Deploy
                 </button>
@@ -95,4 +105,4 @@ const DataTable = () => {
     );
 };
 
-export default DataTable;
+export default DiscoveredMachines;
