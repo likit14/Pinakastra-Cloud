@@ -1,18 +1,42 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import Sidebar from '../Components/sidebar';
 import Footer from '../Components/footer';
 
 import '../Styles/DiscoveredMachines.css'; // Import your CSS file for styling
 
-const DataTable = () => {
-    // Example data, replace with actual data fetching logic
+const NetworkScanner = () => {
+    const [nodes, setNodes] = useState([]);
+    const [validationResults, setValidationResults] = useState({});
     const [selectedRows, setSelectedRows] = useState([]);
+    const [selectedNode, setSelectedNode] = useState(null);
+    const [imagePath, setImagePath] = useState('');
 
-    const data = [
-        { id: 1, slNo: 1, ipAddress: '192.168.1.1', hostname: 'example.com', deploymentSection: 'Deploy' },
-        { id: 2, slNo: 2, ipAddress: '192.168.1.2', hostname: 'example.net', deploymentSection: 'Deploy' },
-        // Add more data as needed
-    ];
+    const scanNetwork = async () => {
+        try {
+            const response = await axios.get('http://localhost:5000/scan');
+            setNodes(response.data);
+            setValidationResults({});
+        } catch (error) {
+            console.error('Error scanning network:', error);
+        }
+    };
+
+    // const validateNode = async (node) => {
+    //     try {
+    //         const response = await axios.post('http://localhost:5000/validate', { ip: node.ip });
+    //         setValidationResults(prevResults => ({
+    //             ...prevResults,
+    //             [node.ip]: response.data
+    //         }));
+    //     } catch (error) {
+    //         console.error('Error validating node:', error);
+    //         setValidationResults(prevResults => ({
+    //             ...prevResults,
+    //             [node.ip]: { status: 'failure', message: 'Validation failed due to an error.' }
+    //         }));
+    //     }
+    // };
 
     const handleCheckboxChange = (event, row) => {
         const isChecked = event.target.checked;
@@ -23,76 +47,106 @@ const DataTable = () => {
         }
     };
 
-    const handleValidate = (rowData) => {
-        // Example: Simulate validation
-        setTimeout(() => {
-            const updatedData = data.map(item => {
-                if (item.id === rowData.id) {
-                    return { ...item, validationStatus: 'PASS' }; // Replace with actual validation result
-                }
-                return item;
-            });
-            console.log('Validation complete:', updatedData);
-            // Update state or perform further actions based on validation
-        }, 1000); // Simulate API delay
-    };
+    // const handlePxeBoot = async () => {
+    //     try {
+    //         const response = await axios.post('http://localhost:5000/pxe-boot', {
+    //             ip: selectedNode.ip,
+    //             image_path: imagePath
+    //         });
+    //         alert(response.data.message);
+    //     } catch (error) {
+    //         console.error('Error triggering PXE boot:', error);
+    //     }
+    // };
 
-    const handleDeploy = () => {
-        // Example: Simulate deployment
-        console.log('Deploying:', selectedRows);
-        // Implement actual deployment logic here, e.g., call an API
-    };
+    // const handleDeploy = () => {
+    //     // Example: Simulate deployment
+    //     console.log('Deploying:', selectedRows);
+    //     // Implement actual deployment logic here, e.g., call an API
+    // };
 
     return (
         <div className="data-table-container">
             <h1>Discovered Machines</h1>
             <div className="container">
-                <div className="data-table-container">
-                    {/* <h2>Data Table</h2> */}
-                    <table className="data-table">
-                        <thead>
-                            <tr>
-                                <th>Sl No.</th>
-                                <th>IP Address</th>
-                                <th>Hostname</th>
-                                <th>Designating<br />Validation</th>
-                                <th>Result</th>
-                                <th>Deployment<br />Section</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {data.map((row, index) => (
-                                <tr key={index}>
-                                    <td>{row.slNo}</td>
-                                    <td>{row.ipAddress}</td>
-                                    <td>{row.hostname}</td>
-                                    <td>
-                                        <button onClick={() => handleValidate(row)}>Validate</button>
-                                    </td>
-                                    <td style={{ color: 'green', fontFamily: 'Arial, sans-serif' }}><b>PASS</b></td>
-                                    <td>
-                                        <input type="checkbox" onChange={(event) => handleCheckboxChange(event, row)} />
-                                        {row.deploymentSection}
-                                    </td>
+                <button onClick={scanNetwork}>Scan Network</button>
+                {nodes.length > 0 && (
+                    <div>
+                        <h3>Discovered Nodes</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Sl No.</th>
+                                    <th>IP Address</th>
+                                    <th>Hostname</th>
+                                    <th>Last Seen</th>
+                                    <th>Validate</th>
+                                    <th>Validation Result</th>
+                                    <th>Info</th>
+                                    <th>Deployment<br />Section</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody>
+                                {nodes.map((node, index) => (
+                                    <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{node.ip}</td>
+                                        <td>{node.hostname}</td>
+                                        <td>{node.last_seen}</td>
+                                        <td>
+                                            <button >Validate</button>
+                                            {/* <button onClick={() => validateNode(node)}>Validate</button> */}
+                                        </td>
+                                        <td>
+                                            {validationResults[node.ip] ? validationResults[node.ip].status : 'Not validated'}
+                                        </td>
+                                        <td>
+                                            {validationResults[node.ip] && validationResults[node.ip].status === 'failure' && (
+                                                <button onClick={() => alert(validationResults[node.ip].message)}>Info</button>
+                                            )}
+                                        </td>
+                                        <td>
+                                            <input type="checkbox" onChange={(event) => handleCheckboxChange(event, node)} />
+                                            Deploy
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                        {selectedNode && (
+                            <div>
+                                <h3>Selected Node: {selectedNode.ip}</h3>
+                                <input
+                                    type="text"
+                                    value={imagePath}
+                                    onChange={(e) => setImagePath(e.target.value)}
+                                    placeholder="Enter PXE boot image path"
+                                />
+                                <button >PXE Boot</button>
+                                {/* <button onClick={handlePxeBoot}>PXE Boot</button> */}
+                            </div>
+                        )}
+                    </div>
+                )}
                 <Sidebar />
                 <Footer />
-
-                {/* Deploy button with external CSS class */}
                 <button
+                    className="button-deploy"
+                    
+                    disabled={selectedRows.length === 0}
+                >
+                    Deploy
+                </button>
+                {/* <button
                     className="button-deploy"
                     onClick={handleDeploy}
                     disabled={selectedRows.length === 0}
                 >
                     Deploy
-                </button>
+                </button> */}
             </div>
         </div>
     );
 };
 
-export default DataTable;
+export default NetworkScanner;
