@@ -17,7 +17,7 @@ const DeploymentOptions = () => {
     console.log("Next button clicked");
     // Determine where to navigate based on selectedOption
     if (selectedOption === "Standalone Cloud Setup") {
-      setRedirectTo('/discoveredmachines'); // Redirect to Discoveredmachines
+      setRedirectTo('/networkscanner'); // Redirect to Discoveredmachines
     } else if (selectedOption === "Distributed Cloud Setup") {
       setRedirectTo('/error'); // Redirect to error page
     }

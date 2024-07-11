@@ -25,6 +25,7 @@ const Sidebar = ({ children }) => {
   };
 
   return (
+    <div className='Main'>
     <div className="layout">
       <div className="user-profile" onClick={toggleProfileMenu}>
         <FontAwesomeIcon icon={faUser} className="profile-icon" />
@@ -69,6 +70,7 @@ const Sidebar = ({ children }) => {
           </li>
         </ul>
       </aside>
+    </div>
     </div>
   );
 };

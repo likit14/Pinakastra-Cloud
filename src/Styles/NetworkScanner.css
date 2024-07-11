@@ -1,31 +1,44 @@
-/* DiscoveredMachines Component CSS */
+/* DiscoveredMachines.css */
+
+
+
+.header{
+    margin-top: 5%;
+    margin-left: 12%;
+    position:relative;
+}
+
 
 .data-table-container {
-    display: flex;
-    flex-direction: column;
+    margin-top: 18%;
     justify-content: center;
     align-items: center;
-    height: 100%;
     padding: 20px; /* Adjust padding as needed */
 }
 
 .data-table-header {
+    /* margin-top: 1%; */
     margin-bottom: 20px;
 }
 
 .data-table {
-    width: 100%;
+    margin-left: 5%;
+    width: 50%; /* Adjusted width for the table */
+    max-width: 100%;
     border-collapse: collapse;
     border: 1px solid #dddddd;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     background-color: #ffffff;
-    margin-top: -370px;
-    margin-left: 100px;
+    margin-top: 20px; /* Adjust margin as needed */
+    position:inherit;
 }
+.main {
+    overflow-y: hidden; /* Hide vertical scrollbar */
+  }
 
 .data-table th, .data-table td {
     border: 1px solid #dddddd;
-    padding: 19px;
+    padding: 15px; /* Adjust padding as needed */
     text-align: left;
 }
 
@@ -60,19 +73,20 @@
 .data-table button:hover {
     background-color: #45a049;
 }
-body {
-    overflow-y: hidden; /* Hide vertical scrollbar */
-  }
 
-  .button-deploy {
+.body {
+    overflow-y: hidden; /* Hide vertical scrollbar */
+}
+
+.button {
     background-color: #4CAF50;
     color: white;
     padding: 10px 20px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    margin-top: 10px;
-    margin-left: -53px;
+    /* margin-top: 10px; */
+    margin-left: 84%;
 }
 
 /* Checkbox Appearance */

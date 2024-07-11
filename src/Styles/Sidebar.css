@@ -1,5 +1,15 @@
 /* sidebar.css */
 
+.Main{
+  overflow: auto; /* Enable both vertical and horizontal scrollbars */
+  max-height: 300px; /* Optional: Set a maximum height */
+  margin-top: 100px;
+  max-width: 100%; /* Optional: Set a maximum width */
+  height:500px;
+  white-space: nowrap; /* Optional: Prevent wrapping */
+}
+
+
 .sidebar {
   width: 250px;
   height: 100%;

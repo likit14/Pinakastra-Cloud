@@ -3,7 +3,7 @@ import App from '../App'
 import Signup from "../View/Signup";
 import ErrorPageContainer from "../View/ErrorPageContainer";
 import DeploymentOptions from "../View/DeploymentOptions";
-import DiscoveredMachines from "../View/DiscoveredMachines";
+import NetworkScanner from "../View/NetworkScanner"
 import DesignatedNodes from "../View/DesignatedNodes";
 import DeploymentInfo from "../View/DeploymentInfo";
 export const router=createBrowserRouter([
@@ -17,8 +17,8 @@ export const router=createBrowserRouter([
         element: <DeploymentOptions/>
     },
     {
-        path: '/discoveredmachines',
-        element: <DiscoveredMachines/>
+        path: '/networkscanner',
+        element: <NetworkScanner/>
     },
     {
         path: '/designatednodes',
