@@ -16,7 +16,7 @@ const DataTable = () => {
 
     const scanNetwork = async () => {
         try {
-            const response = await axios.get('http://127.0.0.1:5000/scan');
+            const response = await axios.get('http://127.0.0.1:7000/scan');
             setNodes(response.data);
             setValidationResults({});
         } catch (error) {
@@ -35,7 +35,7 @@ const DataTable = () => {
 
     const validateNode = async (node) => {
         try {
-            const response = await axios.post('http://127.0.0.1:5000/validate', { ip: node.ip });
+            const response = await axios.post('http://127.0.0.1:7000/validate', { ip: node.ip });
             setValidationResults(prevResults => ({
                 ...prevResults,
                 [node.ip]: response.data

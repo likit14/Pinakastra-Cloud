@@ -15,7 +15,7 @@ const NetworkScanner = () => {
 
     const scanNetwork = async () => {
         try {
-            const response = await axios.get('http://127.0.0.1:5000/scan');
+            const response = await axios.get('http://127.0.0.1:6000/scan');
             setNodes(response.data);
             setValidationResults({});
         } catch (error) {
