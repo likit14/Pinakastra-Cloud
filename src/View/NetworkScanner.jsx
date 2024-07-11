@@ -57,12 +57,10 @@ const DataTable = () => {
         <div>
             <div className='header'>
                 <center><h1>Discovered Machines<button className='button' onClick={handleRefresh}><FontAwesomeIcon icon={faArrowsRotate} size="2x" /></button></h1></center>
-                
             </div>
             <div className='main'>
                 <div className="data-table-container">
                     <div className="container">
-                        {nodes.length > 0 && (
                             <div>
                                 <table className="data-table">
                                     <thead>
@@ -77,6 +75,7 @@ const DataTable = () => {
                                             <th>Deploy</th>
                                         </tr>
                                     </thead>
+                        {nodes.length > 0 && (
                                     <tbody>
                                         {nodes.map((node, index) => (
                                             <tr key={index}>
@@ -101,9 +100,9 @@ const DataTable = () => {
                                             </tr>
                                         ))}
                                     </tbody>
+                                    )}
                                 </table>
                             </div>
-                        )}
                         <Sidebar />
                         {/* <Footer /> */}
                         {/* <button

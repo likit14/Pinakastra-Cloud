@@ -10,10 +10,10 @@
 
 
 .data-table-container {
-    margin-top: 16%;
+    margin-top: 15%; 
     justify-content: center;
     align-items: center;
-    padding: 20px; /* Adjust padding as needed */
+    padding: 30px; /* Adjust padding as needed */
 }
 
 .data-table-header {
@@ -30,7 +30,7 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     background-color: #ffffff;
     margin-top: 20px; /* Adjust margin as needed */
-    position:inherit;
+    /* position:inherit; */
 }
 .main {
     overflow-y: hidden; /* Hide vertical scrollbar */
@@ -47,6 +47,7 @@
     color: #333333;
     font-weight: bold;
     text-transform: uppercase;
+    /* position: relative; */
 }
 
 .data-table td {
