@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Sidebar from '../Components/sidebar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSync } from '@fortawesome/free-solid-svg-icons';
+import { faArrowsRotate } from '@fortawesome/free-solid-svg-icons';
 import '../Styles/NetworkScanner.css';
 
 const DataTable = () => {
@@ -56,10 +56,8 @@ const DataTable = () => {
     return (
         <div>
             <div className='header'>
-                <center><h1>Discovered Machines</h1></center>
-                <button className='button' onClick={handleRefresh}>
-                    <FontAwesomeIcon icon={faSync} />
-                </button>
+                <center><h1>Discovered Machines<button className='button' onClick={handleRefresh}><FontAwesomeIcon icon={faArrowsRotate} size="2x" /></button></h1></center>
+                
             </div>
             <div className='main'>
                 <div className="data-table-container">

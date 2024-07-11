@@ -10,7 +10,7 @@
 
 
 .data-table-container {
-    margin-top: 18%;
+    margin-top: 16%;
     justify-content: center;
     align-items: center;
     padding: 20px; /* Adjust padding as needed */
@@ -79,14 +79,14 @@
 }
 
 .button {
-    background-color: #4CAF50;
-    color: white;
+    /* background-color: #4CAF50; */
+    color: #4CAF50;
     padding: 10px 20px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     /* margin-top: 10px; */
-    margin-left: 84%;
+    /* margin-left: 84%; */
 }
 
 /* Checkbox Appearance */
