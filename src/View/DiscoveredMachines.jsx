@@ -9,7 +9,6 @@ const NetworkScanner = () => {
     const [nodes, setNodes] = useState([]);
     const [validationResults, setValidationResults] = useState({});
     const [selectedRows, setSelectedRows] = useState([]);
-    const [selectedNode, setSelectedNode] = useState(null);
     const [imagePath, setImagePath] = useState('');
 
     const scanNetwork = async () => {
@@ -22,48 +21,47 @@ const NetworkScanner = () => {
         }
     };
 
-    // const validateNode = async (node) => {
-    //     try {
-    //         const response = await axios.post('http://localhost:5000/validate', { ip: node.ip });
-    //         setValidationResults(prevResults => ({
-    //             ...prevResults,
-    //             [node.ip]: response.data
-    //         }));
-    //     } catch (error) {
-    //         console.error('Error validating node:', error);
-    //         setValidationResults(prevResults => ({
-    //             ...prevResults,
-    //             [node.ip]: { status: 'failure', message: 'Validation failed due to an error.' }
-    //         }));
-    //     }
-    // };
+    const validateNode = async (node) => {
+        try {
+            const response = await axios.post('http://localhost:5000/validate', { ip: node.ip });
+            setValidationResults(prevResults => ({
+                ...prevResults,
+                [node.ip]: response.data
+            }));
+        } catch (error) {
+            console.error('Error validating node:', error);
+            setValidationResults(prevResults => ({
+                ...prevResults,
+                [node.ip]: { status: 'fail', message: 'Validation failed due to an error.' }
+            }));
+        }
+    };
 
     const handleCheckboxChange = (event, row) => {
         const isChecked = event.target.checked;
         if (isChecked) {
             setSelectedRows([...selectedRows, row]);
         } else {
-            setSelectedRows(selectedRows.filter(selectedRow => selectedRow.id !== row.id));
+            setSelectedRows(selectedRows.filter(selectedRow => selectedRow.ip !== row.ip));
         }
     };
 
-    // const handlePxeBoot = async () => {
-    //     try {
-    //         const response = await axios.post('http://localhost:5000/pxe-boot', {
-    //             ip: selectedNode.ip,
-    //             image_path: imagePath
-    //         });
-    //         alert(response.data.message);
-    //     } catch (error) {
-    //         console.error('Error triggering PXE boot:', error);
-    //     }
-    // };
+    const handlePxeBoot = async () => {
+        try {
+            const response = await axios.post('http://localhost:5000/pxe-boot', {
+                ip: selectedRows[0].ip, // Assume first selected node for simplicity
+                image_path: imagePath
+            });
+            alert(response.data.message);
+        } catch (error) {
+            console.error('Error triggering PXE boot:', error);
+        }
+    };
 
-    // const handleDeploy = () => {
-    //     // Example: Simulate deployment
-    //     console.log('Deploying:', selectedRows);
-    //     // Implement actual deployment logic here, e.g., call an API
-    // };
+    const handleDeploy = () => {
+        console.log('Deploying:', selectedRows);
+        // Implement actual deployment logic here, e.g., call an API
+    };
 
     return (
         <div className="data-table-container">
@@ -94,14 +92,13 @@ const NetworkScanner = () => {
                                         <td>{node.hostname}</td>
                                         <td>{node.last_seen}</td>
                                         <td>
-                                            <button >Validate</button>
-                                            {/* <button onClick={() => validateNode(node)}>Validate</button> */}
+                                            <button onClick={() => validateNode(node)}>Validate</button>
                                         </td>
                                         <td>
                                             {validationResults[node.ip] ? validationResults[node.ip].status : 'Not validated'}
                                         </td>
                                         <td>
-                                            {validationResults[node.ip] && validationResults[node.ip].status === 'failure' && (
+                                            {validationResults[node.ip] && validationResults[node.ip].status === 'fail' && (
                                                 <button onClick={() => alert(validationResults[node.ip].message)}>Info</button>
                                             )}
                                         </td>
@@ -113,17 +110,16 @@ const NetworkScanner = () => {
                                 ))}
                             </tbody>
                         </table>
-                        {selectedNode && (
+                        {selectedRows.length > 0 && (
                             <div>
-                                <h3>Selected Node: {selectedNode.ip}</h3>
+                                <h3>Selected Node: {selectedRows[0].ip}</h3>
                                 <input
                                     type="text"
                                     value={imagePath}
                                     onChange={(e) => setImagePath(e.target.value)}
                                     placeholder="Enter PXE boot image path"
                                 />
-                                <button >PXE Boot</button>
-                                {/* <button onClick={handlePxeBoot}>PXE Boot</button> */}
+                                <button onClick={handlePxeBoot}>PXE Boot</button>
                             </div>
                         )}
                     </div>
@@ -132,18 +128,11 @@ const NetworkScanner = () => {
                 <Footer />
                 <button
                     className="button-deploy"
-                    
-                    disabled={selectedRows.length === 0}
-                >
-                    Deploy
-                </button>
-                {/* <button
-                    className="button-deploy"
                     onClick={handleDeploy}
                     disabled={selectedRows.length === 0}
                 >
                     Deploy
-                </button> */}
+                </button>
             </div>
         </div>
     );
