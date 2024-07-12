@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from '../Components/sidebar';
 import Footer from '../Components/footer';
-
 import '../Styles/DesignatedNodes.css';
 
 const DesignatedNodes = () => {
+    const location = useLocation();
     const navigate = useNavigate();
-    const [selectedRows, setSelectedRows] = useState([]);
-    const [roles, setRoles] = useState([
-        { id: 1, slNo: 1, ipAddress: '192.168.1.1', hostname: 'example.com', roles: [] },
-        { id: 2, slNo: 2, ipAddress: '192.168.1.2', hostname: 'example.net', roles: [] },
-        // Add more data as needed
-    ]);
+    const [selectedRows, setSelectedRows] = useState(location.state.selectedNodes || []);
+    const [roles, setRoles] = useState(selectedRows.map((node, index) => ({
+        id: index + 1,
+        slNo: index + 1,
+        ipAddress: node.ip,
+        hostname: node.hostname,
+        roles: []
+    })));
 
     const handleCheckboxChange = (event, row, role) => {
         const isChecked = event.target.checked;
@@ -69,7 +71,7 @@ const DesignatedNodes = () => {
                                                 checked={row.roles.includes('Compute')}
                                                 onChange={(event) => handleCheckboxChange(event, row, 'Compute')}
                                             />
-                                            <span>Compute</span>
+                                            <span>HCI</span>
                                         </label>
                                         <br />
                                         <label>
@@ -78,17 +80,17 @@ const DesignatedNodes = () => {
                                                 checked={row.roles.includes('Control')}
                                                 onChange={(event) => handleCheckboxChange(event, row, 'Control')}
                                             />
-                                            <span>Control</span>
+                                            <span>Compute&Storage</span>
                                         </label>
                                         <br />
-                                        <label>
+                                        {/* <label>
                                             <input
                                                 type="checkbox"
                                                 checked={row.roles.includes('Storage')}
                                                 onChange={(event) => handleCheckboxChange(event, row, 'Storage')}
                                             />
                                             <span>Storage</span>
-                                        </label>
+                                        </label> */}
                                     </td>
                                 </tr>
                             ))}

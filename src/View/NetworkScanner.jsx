@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import Sidebar from '../Components/sidebar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowsRotate } from '@fortawesome/free-solid-svg-icons';
@@ -9,6 +10,7 @@ const DataTable = () => {
     const [selectedRows, setSelectedRows] = useState([]);
     const [nodes, setNodes] = useState([]);
     const [validationResults, setValidationResults] = useState({});
+    const navigate = useNavigate();
 
     useEffect(() => {
         scanNetwork();
@@ -53,6 +55,10 @@ const DataTable = () => {
         scanNetwork();
     };
 
+    const handleDeploy = () => {
+        navigate('/designatednodes', { state: { selectedNodes: selectedRows } });
+    };
+
     return (
         <div>
             <div className='header'>
@@ -76,6 +82,7 @@ const DataTable = () => {
                                         </tr>
                                     </thead>
                         {nodes.length > 0 && (
+
                                     <tbody>
                                         {nodes.map((node, index) => (
                                             <tr key={index}>
@@ -100,18 +107,20 @@ const DataTable = () => {
                                             </tr>
                                         ))}
                                     </tbody>
-                                    )}
+                        )}
+                                  
                                 </table>
-                            </div>
-                        <Sidebar />
-                        {/* <Footer /> */}
-                        {/* <button
-                            className="button-deploy"
+                                <button
+                            className="next-button"
                             onClick={handleDeploy}
                             disabled={selectedRows.length === 0}
                         >
-                            Deploy
-                        </button> */}
+                            <strong>Next</strong>
+                        </button>
+                            </div>
+                        
+                        <Sidebar />
+                       
                     </div>
                 </div>
             </div>
