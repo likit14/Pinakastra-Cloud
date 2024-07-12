@@ -4,11 +4,11 @@ import axios from 'axios';
 import img1 from '../Images/logo.png';
 import Footer from '../Components/footerforlogin';
 import '../Styles/Login.css';
-import { Link,useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const Login = (props) => {
   const {checkLogin}=props
-  const navigate=useNavigate()
+  // const navigate=useNavigate()
   const [formData, setFormData] = useState({
     id: '',
     companyName: '',
@@ -103,4 +103,4 @@ const Login = (props) => {
   );
 };
 
-export default Logins;
+export default Login;
