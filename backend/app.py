@@ -3,7 +3,8 @@ from flask_cors import CORS
 import socket
 import ipaddress
 from datetime import datetime
-from scapy.all import ARP, Ether, srp
+from scapy.all import ARP, Ether, srp, TCP, sr1 , IP
+import nmap
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -24,6 +25,19 @@ def get_network_range(local_ip):
     network = ip_interface.network
     return network
 
+def is_server(ip):
+    # Use nmap to detect the OS
+    nm = nmap.PortScanner()
+    try:
+        nm.scan(ip, arguments='-O')  # OS detection
+        os_info = nm[ip].get('osmatch', [])
+        for os in os_info:
+            if 'server' in os['name'].lower():
+                return True
+    except Exception as e:
+        print(f"Error scanning {ip}: {e}")
+    return False
+
 def scan_network(network):
     arp_request = ARP(pdst=str(network))
     broadcast = Ether(dst="ff:ff:ff:ff:ff:ff")
@@ -41,6 +55,13 @@ def scan_network(network):
             node_info['hostname'] = socket.gethostbyaddr(received.psrc)[0]
         except socket.herror:
             node_info['hostname'] = 'Unknown'
+        
+        # Check if the device is a server
+        if is_server(received.psrc):
+            node_info['device_type'] = 'Server'
+        else:
+            node_info['device_type'] = 'Other'
+
         active_nodes.append(node_info)
 
     return active_nodes
@@ -64,4 +85,4 @@ def scan_network_api():
     return jsonify(active_nodes)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=7000)
+    app.run(host='0.0.0.0', port=8000)

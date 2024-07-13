@@ -10,7 +10,10 @@ const DataTable = () => {
     const [selectedRows, setSelectedRows] = useState([]);
     const [nodes, setNodes] = useState([]);
     const [validationResults, setValidationResults] = useState({});
-    const [validatingNode, setValidatingNode] = useState(null); // Track which node is being validated
+    const [validatingNode, setValidatingNode] = useState(null);
+    const [isScanning, setIsScanning] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 6;
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -18,15 +21,15 @@ const DataTable = () => {
     }, []);
 
     const scanNetwork = async () => {
+        setIsScanning(true);
         try {
-            const response = await axios.get('http://127.0.0.1:7000/scan');
-            setNodes(prevNodes => {
-                const newNodes = response.data.filter(node => !prevNodes.some(prevNode => prevNode.ip === node.ip));
-                return [...prevNodes, ...newNodes];
-            });
+            const response = await axios.get('http://127.0.0.1:8000/scan');
+            setNodes(response.data);
             setValidationResults({});
         } catch (error) {
             console.error('Error scanning network:', error);
+        } finally {
+            setIsScanning(false);
         }
     };
 
@@ -42,7 +45,7 @@ const DataTable = () => {
     const validateNode = async (node) => {
         setValidatingNode(node);
         try {
-            const response = await axios.post('http://127.0.0.1:7000/validate', { ip: node.ip });
+            const response = await axios.post('http://127.0.0.1:8000/validate', { ip: node.ip });
             setValidationResults(prevResults => ({
                 ...prevResults,
                 [node.ip]: response.data
@@ -54,7 +57,7 @@ const DataTable = () => {
                 [node.ip]: { status: 'failure', message: 'Validation failed due to an error.' }
             }));
         } finally {
-            setValidatingNode(null); // Reset validatingNode state after validation
+            setValidatingNode(null);
         }
     };
 
@@ -65,6 +68,12 @@ const DataTable = () => {
     const handleDeploy = () => {
         navigate('/designatednodes', { state: { selectedNodes: selectedRows } });
     };
+
+    const handlePageChange = (newPage) => {
+        setCurrentPage(newPage);
+    };
+
+    const paginatedNodes = nodes.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
     return (
         <div>
@@ -81,7 +90,7 @@ const DataTable = () => {
                                         <th>Sl<br/>No.</th>
                                         <th>IP Address</th>
                                         <th>Hostname</th>
-                                        <th>Last<br/>Seen</th>
+                                        <th>Device<br/>Type</th>
                                         <th>Validate</th>
                                         <th>Validation<br/>Result</th>
                                         <th>Info</th>
@@ -89,12 +98,22 @@ const DataTable = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {nodes.map((node, index) => (
+                                    {isScanning && (
+                                        <tr>
+                                            <td colSpan="8" className="scanning-message"><center>Scanning...</center></td>
+                                        </tr>
+                                    )}
+                                    {!isScanning && nodes.length === 0 && (
+                                        <tr>
+                                            <td colSpan="8" className="no-device-message"><center>No device found</center></td>
+                                        </tr>
+                                    )}
+                                    {!isScanning && paginatedNodes.map((node, index) => (
                                         <tr key={index}>
-                                            <td>{index + 1}</td>
+                                            <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
                                             <td>{node.ip}</td>
                                             <td>{node.hostname}</td>
-                                            <td>{node.last_seen}</td>
+                                            <td>{node.device_type}</td>
                                             <td>
                                                 <button
                                                     disabled={validatingNode !== null && validatingNode.ip === node.ip}
@@ -118,6 +137,17 @@ const DataTable = () => {
                                     ))}
                                 </tbody>
                             </table>
+                            <div className="pagination">
+                                {Array.from({ length: Math.ceil(nodes.length / itemsPerPage) }, (_, i) => (
+                                    <button
+                                        key={i}
+                                        onClick={() => handlePageChange(i + 1)}
+                                        className={currentPage === i + 1 ? 'active' : ''}
+                                    >
+                                        {i + 1.}
+                                    </button>
+                                ))}
+                            </div>
                             <button
                                 className="next-button"
                                 onClick={handleDeploy}
@@ -127,7 +157,6 @@ const DataTable = () => {
                             </button>
                         </div>
                         <Sidebar />
-                        {/* <footer/> */}
                     </div>
                 </div>
             </div>
