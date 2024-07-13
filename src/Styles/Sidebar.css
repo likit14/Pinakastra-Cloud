@@ -125,8 +125,8 @@
   border: none;
   color: #ecf0f1;
   cursor: pointer;
-  padding: 0px;
+  padding: 0px 2px; /* Adjust the padding to make the button smaller */
   background-color: #34495e;
   border-radius: 5px;
+  font-size: 11px; /* Reduce the font size */
 }
-

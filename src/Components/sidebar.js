@@ -29,12 +29,12 @@ const Sidebar = ({ children }) => {
     <div className="layout">
       <div className="user-profile" onClick={toggleProfileMenu}>
         <FontAwesomeIcon icon={faUser} className="profile-icon" />
-        <span className="user-name">{userData.companyName}</span>
+        <span className="user-name"><strong>&nbsp; {userData.companyName}&nbsp; </strong></span>
         {profileMenuOpen && (
           <div className="profile-menu">
             <button className="logout-button" onClick={handleLogout}>
               <FontAwesomeIcon icon={faSignOutAlt} />
-              <span>Logout</span>
+              <span><strong> &nbsp; Logout</strong></span>
             </button>
           </div>
         )}
