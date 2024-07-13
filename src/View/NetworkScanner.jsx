@@ -15,6 +15,7 @@ const DataTable = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 6;
     const navigate = useNavigate();
+    const [isRotating, setIsRotating] = useState(false);
 
     useEffect(() => {
         scanNetwork();
@@ -63,6 +64,10 @@ const DataTable = () => {
 
     const handleRefresh = () => {
         scanNetwork();
+        setIsRotating(true);
+        setTimeout(() => {
+            setIsRotating(false);
+          }, 1000);
     };
 
     const handleDeploy = () => {
@@ -78,7 +83,9 @@ const DataTable = () => {
     return (
         <div>
             <div className='header'>
-                <center><h1>Discovered Machines<button className='button' onClick={handleRefresh}><FontAwesomeIcon icon={faArrowsRotate} size="2x" /></button></h1></center>
+                <center><h1>Discovered Machines<button className={`button ${isRotating ? 'rotating' : ''}`} onClick={handleRefresh}>
+          <FontAwesomeIcon icon={faArrowsRotate} size="2x" />
+        </button></h1></center>
             </div>
             <div className='main'>
                 <div className="data-table-container">

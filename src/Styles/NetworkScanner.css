@@ -72,7 +72,7 @@
 .button {
     background-color:#f0f0f0;
     color: #4CAF50;
-    padding: 10px 20px;
+    padding: 0px 20px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -161,3 +161,17 @@
     background-color: #4CAF50;
     color: white;
 }
+
+@keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .rotating {
+    animation: rotate 1s linear infinite;
+  }
+  

@@ -47,6 +47,7 @@ body {
   border: 1px solid #D3D3D3;
   border-radius: 4px;
   transition: all 0.3s ease-in-out; /* Smooth transition */
+  
 }
 
 .login-form input::placeholder {
