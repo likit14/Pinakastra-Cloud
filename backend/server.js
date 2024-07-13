@@ -1,6 +1,6 @@
 const express = require('express');
 const session = require('express-session');
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const { v4: uuidv4 } = require('uuid');
 const bodyParser = require('body-parser');
 const authRoutes = require('./authRoutes'); // Adjust the path as needed
@@ -30,7 +30,7 @@ app.use(session({
 
 // MySQL connection
 const db = mysql.createConnection({
-  host: 'localhost',
+  host: '127.0.0.1',
   user: 'root', // Change this to your MySQL username
   password: 'Likith@172323', // Change this to your MySQL password
   database: 'standalone', // Change this to your MySQL database name

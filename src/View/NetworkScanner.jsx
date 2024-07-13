@@ -10,6 +10,7 @@ const DataTable = () => {
     const [selectedRows, setSelectedRows] = useState([]);
     const [nodes, setNodes] = useState([]);
     const [validationResults, setValidationResults] = useState({});
+    const [validatingNode, setValidatingNode] = useState(null); // Track which node is being validated
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -19,7 +20,10 @@ const DataTable = () => {
     const scanNetwork = async () => {
         try {
             const response = await axios.get('http://127.0.0.1:7000/scan');
-            setNodes(response.data);
+            setNodes(prevNodes => {
+                const newNodes = response.data.filter(node => !prevNodes.some(prevNode => prevNode.ip === node.ip));
+                return [...prevNodes, ...newNodes];
+            });
             setValidationResults({});
         } catch (error) {
             console.error('Error scanning network:', error);
@@ -36,6 +40,7 @@ const DataTable = () => {
     };
 
     const validateNode = async (node) => {
+        setValidatingNode(node);
         try {
             const response = await axios.post('http://127.0.0.1:7000/validate', { ip: node.ip });
             setValidationResults(prevResults => ({
@@ -48,6 +53,8 @@ const DataTable = () => {
                 ...prevResults,
                 [node.ip]: { status: 'failure', message: 'Validation failed due to an error.' }
             }));
+        } finally {
+            setValidatingNode(null); // Reset validatingNode state after validation
         }
     };
 
@@ -67,60 +74,60 @@ const DataTable = () => {
             <div className='main'>
                 <div className="data-table-container">
                     <div className="container">
-                            <div>
-                                <table className="data-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Sl <br></br>No.</th>
-                                            <th>IP Address</th>
-                                            <th>Hostname</th>
-                                            <th>Last <br></br>Seen</th>
-                                            <th>Validate</th>
-                                            <th>Validation <br></br>Result</th>
-                                            <th>Info</th>
-                                            <th>Deploy</th>
+                        <div>
+                            <table className="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Sl<br/>No.</th>
+                                        <th>IP Address</th>
+                                        <th>Hostname</th>
+                                        <th>Last<br/>Seen</th>
+                                        <th>Validate</th>
+                                        <th>Validation<br/>Result</th>
+                                        <th>Info</th>
+                                        <th>Select</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {nodes.map((node, index) => (
+                                        <tr key={index}>
+                                            <td>{index + 1}</td>
+                                            <td>{node.ip}</td>
+                                            <td>{node.hostname}</td>
+                                            <td>{node.last_seen}</td>
+                                            <td>
+                                                <button
+                                                    disabled={validatingNode !== null && validatingNode.ip === node.ip}
+                                                    onClick={() => validateNode(node)}
+                                                >
+                                                    {validatingNode !== null && validatingNode.ip === node.ip ? 'Validating...' : 'Validate'}
+                                                </button>
+                                            </td>
+                                            <td style={{ color: 'green', fontFamily: 'Arial, sans-serif' }}>
+                                                {validationResults[node.ip] ? validationResults[node.ip].status : 'Not validated'}
+                                            </td>
+                                            <td>
+                                                {validationResults[node.ip] && validationResults[node.ip].status === 'failure' && (
+                                                    <button onClick={() => alert(validationResults[node.ip].message)}>Info</button>
+                                                )}
+                                            </td>
+                                            <td className="checkbox-column">
+                                                <input type="checkbox" onChange={(event) => handleCheckboxChange(event, node)} />
+                                            </td>
                                         </tr>
-                                    </thead>
-                        {nodes.length > 0 && (
-
-                                    <tbody>
-                                        {nodes.map((node, index) => (
-                                            <tr key={index}>
-                                                <td>{index + 1}</td>
-                                                <td>{node.ip}</td>
-                                                <td>{node.hostname}</td>
-                                                <td>{node.last_seen}</td>
-                                                <td>
-                                                    <button onClick={() => validateNode(node)}>Validate</button>
-                                                </td>
-                                                <td style={{ color: 'green', fontFamily: 'Arial, sans-serif' }}>
-                                                    {validationResults[node.ip] ? validationResults[node.ip].status : 'Not validated'}
-                                                </td>
-                                                <td>
-                                                    {validationResults[node.ip] && validationResults[node.ip].status === 'failure' && (
-                                                        <button onClick={() => alert(validationResults[node.ip].message)}>Info</button>
-                                                    )}
-                                                </td>
-                                                <td className="checkbox-column">
-                                                    <input type="checkbox" onChange={(event) => handleCheckboxChange(event, node)} />
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                        )}
-                                  
-                                </table>
-                                <button
-                            className="next-button"
-                            onClick={handleDeploy}
-                            disabled={selectedRows.length === 0}
-                        >
-                            <strong>Next</strong>
-                        </button>
-                            </div>
-                        
+                                    ))}
+                                </tbody>
+                            </table>
+                            <button
+                                className="next-button"
+                                onClick={handleDeploy}
+                                disabled={selectedRows.length === 0}
+                            >
+                                <strong>Next</strong>
+                            </button>
+                        </div>
                         <Sidebar />
-                       
+                        {/* <footer/> */}
                     </div>
                 </div>
             </div>

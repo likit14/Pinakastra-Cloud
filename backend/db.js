@@ -1,9 +1,10 @@
 // backend/db.js
-const mysql = require('mysql');
+const mysql = require('mysql2');
 
 const connection = mysql.createConnection({
-  host: 'localhost',
+  host: '127.0.0.1',
   user: 'root',
+  port: 3306, 
   password: 'Likith@172323',
   database: 'standalone'
 });

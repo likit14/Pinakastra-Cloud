@@ -16,6 +16,17 @@ const DesignatedNodes = () => {
         roles: []
     })));
 
+    const [bmcFormVisible, setBmcFormVisible] = useState(false);
+    const [currentNode, setCurrentNode] = useState(null);
+    const [bmcDetails, setBmcDetails] = useState({
+        ip: '',
+        username: '',
+        password: ''
+    });
+
+    const [loading, setLoading] = useState(false);
+    const [deploymentCompleted, setDeploymentCompleted] = useState(false);
+
     const handleCheckboxChange = (event, row, role) => {
         const isChecked = event.target.checked;
         const updatedRoles = roles.map(item => {
@@ -38,15 +49,54 @@ const DesignatedNodes = () => {
         setSelectedRows(updatedSelectedRows);
     };
 
-    const handleDeploy = () => {
-        console.log('Deploying:', selectedRows);
-        // Implement actual deployment logic here, e.g., call an API
-        navigate('/deploymentinfo');
+    const handleDeploy = (node) => {
+        setCurrentNode(node);
+        setBmcFormVisible(true);
     };
 
+    // const handleBmcFormSubmit = async (event) => {
+    //     event.preventDefault();
+    //     setLoading(true);
+
+    //     // Simulate API call or actual deployment logic here
+    //     try {
+    //         // Example asynchronous operation (replace with actual logic)
+    //         await new Promise(resolve => setTimeout(resolve, 2000)); // Simulating a 2-second delay
+
+    //         // Mark deployment as completed
+    //         setDeploymentCompleted(true);
+
+    //         // Optionally reset form state
+    //         setBmcDetails({
+    //             ip: '',
+    //             username: '',
+    //             password: ''
+    //         });
+
+    //         // Close the form after successful deployment
+    //         setBmcFormVisible(false);
+
+    //         // Navigate to deployment info page
+    //         navigate('/deploymentinfo');
+    //     } catch (error) {
+    //         console.error('Deployment error:', error);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
+
+    // const handleCancel = () => {
+    //     setBmcFormVisible(false);
+    //     setLoading(false);
+    // };
+
     return (
+        <div>
+        <div className='headers'>
+                <center><h1>Designated Nodes</h1></center>
+        </div>
         <div className="data-table-container">
-            <h1>Designated Nodes</h1>
+            {/* <h1></h1> */}
             <div className="container">
                 <div className="data-table-container">
                     <table className="data-table">
@@ -56,6 +106,7 @@ const DesignatedNodes = () => {
                                 <th>IP Address</th>
                                 <th>Hostname</th>
                                 <th>Roles</th>
+                                <th>Deploy</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -82,15 +133,15 @@ const DesignatedNodes = () => {
                                             />
                                             <span>Compute&Storage</span>
                                         </label>
-                                        <br />
-                                        {/* <label>
-                                            <input
-                                                type="checkbox"
-                                                checked={row.roles.includes('Storage')}
-                                                onChange={(event) => handleCheckboxChange(event, row, 'Storage')}
-                                            />
-                                            <span>Storage</span>
-                                        </label> */}
+                                    </td>
+                                    <td>
+                                        <button onClick={() => handleDeploy(row)}>Deploy</button>
+                                        {loading && currentNode && currentNode.id === row.id && (
+                                            <div className="loader"></div>
+                                        )}
+                                        {deploymentCompleted && currentNode && currentNode.id === row.id && (
+                                            <div className="completed">Completed</div>
+                                        )}
                                     </td>
                                 </tr>
                             ))}
@@ -101,14 +152,48 @@ const DesignatedNodes = () => {
                 <Sidebar />
                 <Footer />
 
-                <button
-                    className="button-deploy"
-                    onClick={handleDeploy}
-                    disabled={selectedRows.length === 0}
-                >
-                    Next
-                </button>
+                {/* BMC Form */}
+                {/* {bmcFormVisible && (
+                    <div className="bmc-form">
+                        <h2>Enter BMC Details for {currentNode.hostname}</h2>
+                        <form onSubmit={handleBmcFormSubmit}>
+                            <label>
+                                BMC IP Address:
+                                <input
+                                    type="text"
+                                    value={bmcDetails.ip}
+                                    onChange={(e) => setBmcDetails({ ...bmcDetails, ip: e.target.value })}
+                                    required
+                                />
+                            </label>
+                            <label>
+                                BMC Username:
+                                <input
+                                    type="text"
+                                    value={bmcDetails.username}
+                                    onChange={(e) => setBmcDetails({ ...bmcDetails, username: e.target.value })}
+                                    required
+                                />
+                            </label>
+                            <label>
+                                BMC Password:
+                                <input
+                                    type="password"
+                                    value={bmcDetails.password}
+                                    onChange={(e) => setBmcDetails({ ...bmcDetails, password: e.target.value })}
+                                    required
+                                />
+                            </label>
+                            <div>
+                                <button type="submit">Submit</button>
+                                <button type="button" onClick={handleCancel}>Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                )}
+ */}
             </div>
+        </div>
         </div>
     );
 };

@@ -1,45 +1,39 @@
-/* DiscoveredMachines.css */
-
-
-
-.header{
+.header {
     margin-top: 5%;
     margin-left: 12%;
-    position:relative;
+    position: relative;
 }
 
-
 .data-table-container {
-    margin-top: 20%; 
+    margin-top: 5%;
     justify-content: center;
     align-items: center;
-    padding: 30px; /* Adjust padding as needed */
+    padding: 30px;
     margin-left: 5%;
 }
 
 .data-table-header {
-    /* margin-top: 1%; */
     margin-bottom: 20px;
 }
 
 .data-table {
     margin-left: 5%;
-    width: 50%; /* Adjusted width for the table */
+    width: 50%;
     max-width: 100%;
     border-collapse: collapse;
     border: 1px solid #dddddd;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     background-color: #ffffff;
-    margin-top: 20px; /* Adjust margin as needed */
-    /* position:inherit; */
+    margin-top: 20px;
 }
+
 .main {
-    overflow-y: hidden; /* Hide vertical scrollbar */
-  }
+    overflow-y: hidden;
+}
 
 .data-table th, .data-table td {
     border: 1px solid #dddddd;
-    padding: 15px; /* Adjust padding as needed */
+    padding: 15px;
     text-align: left;
 }
 
@@ -48,7 +42,6 @@
     color: #333333;
     font-weight: bold;
     text-transform: uppercase;
-    /* position: relative; */
 }
 
 .data-table td {
@@ -76,22 +69,15 @@
     background-color: #45a049;
 }
 
-.body {
-    overflow-y: hidden; /* Hide vertical scrollbar */
-}
-
 .button {
-    /* background-color: #4CAF50; */
     color: #4CAF50;
     padding: 10px 20px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    /* margin-top: 10px; */
-    /* margin-left: 84%; */
 }
 
-.next-button{
+.next-button {
     background-color: #4CAF50;
     color: white;
     padding: 10px 25px;
@@ -101,7 +87,7 @@
     margin-top: 25px;
     margin-left: 101%;
 }
-/* Checkbox Appearance */
+
 .checkbox-column input[type="checkbox"] {
     appearance: none;
     background-color: #fff;
@@ -126,4 +112,20 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+.loader {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-top: 4px solid #4CAF50;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+    margin-left: 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
