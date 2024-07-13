@@ -3,8 +3,8 @@ import '../Styles/Footer.css';
 const Footer = () => {
   return (
     <footer style={footerStyle}>
-      <p>&copy; Turn-Key Cloud Platform for <a href="https://pinakastra.com" style={linkStyle}>Academia, Research & Enterprises</a></p>
-      <p>Contact us: <a href="mailto:cloud@pinakastra.com">cloud@pinakastra.com</a> | <a href="tel:+919008488882">+91 90084 88882</a></p>
+      <p>&copy;<a href="https://pinakastra.com" style={linkStyle}> Turn-Key Cloud Platform for Academia, Research & Enterprises</a></p>
+      {/* <p>Contact us: <a href="mailto:cloud@pinakastra.com">cloud@pinakastra.com</a> | <a href="tel:+919008488882">+91 90084 88882</a></p> */}
     </footer>
   );
 };

@@ -68,7 +68,7 @@ const DeploymentOptions = () => {
           </div>
         </div>
         <button className="nextButton" onClick={handleNextClick} disabled={!selectedOption}>
-          Next
+          <strong>Next</strong>
         </button>
       </div>
       <Sidebar />

@@ -7,11 +7,15 @@
   max-width: 100%; /* Optional: Set a maximum width */
   height:500px;
   white-space: nowrap; /* Optional: Prevent wrapping */
+  user-select: none; /* Standard syntax */
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
 }
 
 
 .sidebar {
-  width: 250px;
+  width: 19%;
   height: 100%;
   background-color: #22262b;
   color: #ffffff;
@@ -90,17 +94,17 @@
   align-items: center;
   background-color: #34495e;
   color: #ecf0f1;
-  padding: 10px;
+  padding: 5px;
   border-radius: 5px;
   cursor: pointer;
 }
 
 .profile-icon {
-  margin-right: 10px;
+  margin-right: 5px;
 }
 
 .user-name {
-  font-size: 16px;
+  font-size: 15px;
 }
 
 .profile-menu {
@@ -121,6 +125,8 @@
   border: none;
   color: #ecf0f1;
   cursor: pointer;
-  padding: 0px 7px;
+  padding: 0px;
+  background-color: #34495e;
+  border-radius: 5px;
 }
 
