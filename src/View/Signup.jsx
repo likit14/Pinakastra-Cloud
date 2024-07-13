@@ -102,7 +102,7 @@ const Signup = () => {
             <img src={tick} alt="Success Tick" className="tick" />
             <h2>Registration Success</h2>
             <p>Your account name is: <strong>{registeredUser}</strong></p>
-            <p>Your user ID is: <strong>{userId}</strong></p>
+            <p>Please check your <b>Email</b> for your <b>UserID</b></p>
             <div className="login-prompt">
               <p>Please <Link to="/">login</Link> to continue</p>
             </div>

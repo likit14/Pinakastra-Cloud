@@ -1,7 +1,6 @@
 const express = require('express');
 const session = require('express-session');
 const mysql = require('mysql2');
-const { v4: uuidv4 } = require('uuid');
 const bodyParser = require('body-parser');
 const authRoutes = require('./authRoutes'); // Adjust the path as needed
 const cors = require('cors');
@@ -21,12 +20,10 @@ app.use(session({
   saveUninitialized: true,
   cookie: { secure: false } // Set to true in production with HTTPS
 }));
-    // Other middleware like bodyParser, cors, etc.
-    app.use(express.json());
-    app.use(express.urlencoded({ extended: true }));
 
-    // Use the authRoutes and loginRoutes
-
+// Other middleware like bodyParser, cors, etc.
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // MySQL connection
 const db = mysql.createConnection({
@@ -56,7 +53,7 @@ const transporter = nodemailer.createTransport({
 app.get('/createuserstable', (req, res) => {
   const sql = `
     CREATE TABLE IF NOT EXISTS users (
-      id CHAR(36) PRIMARY KEY,
+      id CHAR(21) PRIMARY KEY, // Adjust length as needed
       companyName VARCHAR(255),
       email VARCHAR(255),
       password VARCHAR(255)
@@ -69,9 +66,13 @@ app.get('/createuserstable', (req, res) => {
 });
 
 // Register user endpoint
-app.post('/register', (req, res) => {
+app.post('/register', async (req, res) => {
   const { companyName, email, password } = req.body;
-  const id = uuidv4(); // Generate UUID
+
+  // Dynamically import nanoid with custom alphabet
+  const { customAlphabet } = await import('nanoid');
+  const nanoid = customAlphabet('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', 6);
+  const id = nanoid(); // Generate unique ID with custom alphabet
 
   const sql = 'INSERT INTO users (id, companyName, email, password) VALUES (?, ?, ?, ?)';
   db.query(sql, [id, companyName, email, password], (err, result) => {
@@ -79,8 +80,6 @@ app.post('/register', (req, res) => {
       console.error(err);
       return res.status(500).json({ error: 'Error registering user' });
     }
-
-
 
     // Send registration email
     const mailOptions = {
@@ -94,7 +93,7 @@ app.post('/register', (req, res) => {
 Here are your registration details:
 
 - Company Name:  ${companyName}
-- User ID:                ${id}
+- User ID:                 ${id}
 
 We look forward to support your success!
 
@@ -105,7 +104,8 @@ The Pinakastra Cloud Team
 
 Pinakastra Cloud
 Email: support@pinakastra.cloud
-Website: https://pinakastra.com/`};
+Website: https://pinakastra.com/`
+    };
 
     transporter.sendMail(mailOptions, function(error, info){
       if (error) {
