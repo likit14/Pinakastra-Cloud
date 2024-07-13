@@ -6,7 +6,7 @@ export class ErrorPageContainer extends Component {
     return (
       <div>
         <section className="page_404">
-          <div className="container">
+          <div>
             <div className="row">
               <div className="col-sm-12 ">
                 <div className="col-sm-10 col-sm-offset-1  text-center">
