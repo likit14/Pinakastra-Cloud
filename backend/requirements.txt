@@ -3,3 +3,4 @@ flask-cors
 scapy
 netifaces
 python-nmap
+requests

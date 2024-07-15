@@ -3,8 +3,9 @@ from flask_cors import CORS
 import socket
 import ipaddress
 from datetime import datetime
-from scapy.all import ARP, Ether, srp, TCP, sr1 , IP
+from scapy.all import ARP, Ether, srp
 import nmap
+import requests
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -25,18 +26,52 @@ def get_network_range(local_ip):
     network = ip_interface.network
     return network
 
-def is_server(ip):
-    # Use nmap to detect the OS
+def get_device_type(ip, mac):
     nm = nmap.PortScanner()
     try:
-        nm.scan(ip, arguments='-O')  # OS detection
+        nm.scan(ip, arguments='-O -sV')  # OS and service detection
         os_info = nm[ip].get('osmatch', [])
         for os in os_info:
-            if 'server' in os['name'].lower():
-                return True
+            os_name = os['name'].lower()
+            if 'server' in os_name:
+                return 'Server'
+            if 'router' in os_name or 'switch' in os_name:
+                return 'Network Device'
+            if 'windows' in os_name:
+                return 'Laptop/Desktop'
+            if 'android' in os_name or 'ios' in os_name:
+                return 'Phone'
+
+        services = nm[ip].get('tcp', {})
+        for port, service in services.items():
+            service_name = service['name'].lower()
+            if 'http' in service_name or 'ssh' in service_name:
+                return 'Server'
+            if 'printer' in service_name:
+                return 'Printer'
+            if 'ftp' in service_name:
+                return 'Network Storage'
+            if 'rdp' in service_name:
+                return 'Laptop/Desktop'
+
+        # Additional checks based on MAC address vendor
+        vendor = lookup_mac_vendor(mac)
+        if 'apple' in vendor.lower():
+            return 'Phone' if 'ios' in vendor.lower() else 'Laptop/Desktop'
+        if 'samsung' in vendor.lower() or 'oneplus' in vendor.lower():
+            return 'Phone'
     except Exception as e:
         print(f"Error scanning {ip}: {e}")
-    return False
+    return 'Other'
+
+def lookup_mac_vendor(mac_address):
+    try:
+        response = requests.get(f"https://macvendors.com/{mac_address}")
+        if response.status_code == 200:
+            return response.text
+    except Exception as e:
+        print(f"Error looking up MAC vendor for {mac_address}: {e}")
+    return 'Unknown'
 
 def scan_network(network):
     arp_request = ARP(pdst=str(network))
@@ -49,18 +84,16 @@ def scan_network(network):
         node_info = {
             'ip': received.psrc,
             'mac': received.hwsrc,
-            'last_seen': datetime.now().strftime('%Y-%m-%d')
+            'last_seen': datetime.now().strftime('%Y-%m-%d'),
+            'mac_vendor': lookup_mac_vendor(received.hwsrc)
         }
         try:
             node_info['hostname'] = socket.gethostbyaddr(received.psrc)[0]
         except socket.herror:
             node_info['hostname'] = 'Unknown'
         
-        # Check if the device is a server
-        if is_server(received.psrc):
-            node_info['device_type'] = 'Server'
-        else:
-            node_info['device_type'] = 'Other'
+        # Get the device type
+        node_info['device_type'] = get_device_type(received.psrc, received.hwsrc)
 
         active_nodes.append(node_info)
 
