@@ -67,7 +67,7 @@ const DataTable = () => {
         setIsRotating(true);
         setTimeout(() => {
             setIsRotating(false);
-          }, 1000);
+        }, 1000);
     };
 
     const handleDeploy = () => {
@@ -83,9 +83,13 @@ const DataTable = () => {
     return (
         <div>
             <div className='header'>
-                <center><h1>Discovered Machines<button className={`button ${isRotating ? 'rotating' : ''}`} onClick={handleRefresh}>
-          <FontAwesomeIcon icon={faArrowsRotate} size="2x" />
-        </button></h1></center>
+                <center>
+                    <h1>Discovered Machines
+                        <button className={`button ${isRotating ? 'rotating' : ''}`} onClick={handleRefresh}>
+                            <FontAwesomeIcon icon={faArrowsRotate} size="2x" />
+                        </button>
+                    </h1>
+                </center>
             </div>
             <div className='main'>
                 <div className="data-table-container">
@@ -94,12 +98,12 @@ const DataTable = () => {
                             <table className="data-table">
                                 <thead>
                                     <tr>
-                                        <th>Sl<br/>No.</th>
+                                        <th>Sl<br />No.</th>
                                         <th>IP Address</th>
                                         <th>Hostname</th>
-                                        <th>Device<br/>Type</th>
+                                        <th>OS Type</th>
                                         <th>Validate</th>
-                                        <th>Validation<br/>Result</th>
+                                        <th>Validation<br />Result</th>
                                         <th>Info</th>
                                         <th>Select</th>
                                     </tr>
@@ -120,7 +124,7 @@ const DataTable = () => {
                                             <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
                                             <td>{node.ip}</td>
                                             <td>{node.hostname}</td>
-                                            <td>{node.device_type}</td>
+                                            <td>{node.os_type}</td>
                                             <td>
                                                 <button
                                                     disabled={validatingNode !== null && validatingNode.ip === node.ip}
@@ -151,7 +155,7 @@ const DataTable = () => {
                                         onClick={() => handlePageChange(i + 1)}
                                         className={currentPage === i + 1 ? 'active' : ''}
                                     >
-                                        {i + 1.}
+                                        {i + 1}
                                     </button>
                                 ))}
                             </div>

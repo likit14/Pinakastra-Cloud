@@ -3,14 +3,15 @@ from flask_cors import CORS
 import socket
 import ipaddress
 from datetime import datetime
-from scapy.all import ARP, Ether, srp, TCP, sr1 , IP
+from scapy.all import ARP, Ether, srp
 import nmap
+import netifaces
+import subprocess
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
 def get_local_network_ip():
-    import netifaces
     interfaces = netifaces.interfaces()
     for interface in interfaces:
         addresses = netifaces.ifaddresses(interface)
@@ -25,18 +26,17 @@ def get_network_range(local_ip):
     network = ip_interface.network
     return network
 
-def is_server(ip):
+def get_os_type(ip):
     # Use nmap to detect the OS
     nm = nmap.PortScanner()
     try:
         nm.scan(ip, arguments='-O')  # OS detection
         os_info = nm[ip].get('osmatch', [])
-        for os in os_info:
-            if 'server' in os['name'].lower():
-                return True
+        if os_info:
+            return os_info[0]['name']
     except Exception as e:
         print(f"Error scanning {ip}: {e}")
-    return False
+    return 'Unknown'
 
 def scan_network(network):
     arp_request = ARP(pdst=str(network))
@@ -56,11 +56,8 @@ def scan_network(network):
         except socket.herror:
             node_info['hostname'] = 'Unknown'
         
-        # Check if the device is a server
-        if is_server(received.psrc):
-            node_info['device_type'] = 'Server'
-        else:
-            node_info['device_type'] = 'Other'
+        # Get the OS type
+        node_info['os_type'] = get_os_type(received.psrc)
 
         active_nodes.append(node_info)
 
@@ -83,6 +80,19 @@ def scan_network_api():
     active_nodes = scan_network(network)
 
     return jsonify(active_nodes)
+
+@app.route('/set_pxe_boot', methods=['POST'])
+def set_pxe_boot():
+    data = request.get_json()
+    bmc_ip = data.get('ip')
+    bmc_username = data.get('username')
+    bmc_password = data.get('password')
+
+    try:
+        result = subprocess.check_output(['python', 'set_pxe_boot.py', bmc_ip, bmc_username, bmc_password])
+        return jsonify({"result": result.decode("utf-8")})
+    except subprocess.CalledProcessError as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000)
