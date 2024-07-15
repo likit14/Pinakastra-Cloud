@@ -26,6 +26,8 @@ const DesignatedNodes = () => {
 
     const [loading, setLoading] = useState(false);
     const [deploymentCompleted, setDeploymentCompleted] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const rowsPerPage = 5;
 
     const handleCheckboxChange = (event, row, role) => {
         const isChecked = event.target.checked;
@@ -54,146 +56,178 @@ const DesignatedNodes = () => {
         setBmcFormVisible(true);
     };
 
-    // const handleBmcFormSubmit = async (event) => {
-    //     event.preventDefault();
-    //     setLoading(true);
+    const handleBmcFormSubmit = async (event) => {
+        event.preventDefault();
+        setLoading(true);
 
-    //     // Simulate API call or actual deployment logic here
-    //     try {
-    //         // Example asynchronous operation (replace with actual logic)
-    //         await new Promise(resolve => setTimeout(resolve, 2000)); // Simulating a 2-second delay
+        // Simulate API call or actual deployment logic here
+        try {
+            const response = await fetch('http://localhost:8000/set_pxe_boot', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ ...bmcDetails, roles: currentNode.roles })
+            });
 
-    //         // Mark deployment as completed
-    //         setDeploymentCompleted(true);
+            const result = await response.json();
+            console.log(result);
 
-    //         // Optionally reset form state
-    //         setBmcDetails({
-    //             ip: '',
-    //             username: '',
-    //             password: ''
-    //         });
+            // Mark deployment as completed
+            setDeploymentCompleted(true);
 
-    //         // Close the form after successful deployment
-    //         setBmcFormVisible(false);
+            // Optionally reset form state
+            setBmcDetails({
+                ip: '',
+                username: '',
+                password: ''
+            });
 
-    //         // Navigate to deployment info page
-    //         navigate('/deploymentinfo');
-    //     } catch (error) {
-    //         console.error('Deployment error:', error);
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // };
+            // Close the form after successful deployment
+            setBmcFormVisible(false);
 
-    // const handleCancel = () => {
-    //     setBmcFormVisible(false);
-    //     setLoading(false);
-    // };
+            // Navigate to deployment info page
+            navigate('/deploymentinfo');
+        } catch (error) {
+            console.error('Deployment error:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleCancel = () => {
+        setBmcFormVisible(false);
+        setLoading(false);
+    };
+
+    const indexOfLastRow = currentPage * rowsPerPage;
+    const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+    const currentRows = roles.slice(indexOfFirstRow, indexOfLastRow);
+
+    const handleNextPage = () => {
+        setCurrentPage(prevPage => prevPage + 1);
+    };
+
+    const handlePreviousPage = () => {
+        setCurrentPage(prevPage => prevPage - 1);
+    };
 
     return (
         <div>
-        <div className='headers'>
+            <div className='headers'>
                 <center><h1>Designated Nodes</h1></center>
-        </div>
-        <div className="data-table-container">
-            {/* <h1></h1> */}
-            <div className="container">
-                <div className="data-table-container">
-                    <table className="data-table">
-                        <thead>
-                            <tr>
-                                <th>Sl No.</th>
-                                <th>IP Address</th>
-                                <th>Hostname</th>
-                                <th>Roles</th>
-                                <th>Deploy</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {roles.map((row, index) => (
-                                <tr key={index}>
-                                    <td>{row.slNo}</td>
-                                    <td>{row.ipAddress}</td>
-                                    <td>{row.hostname}</td>
-                                    <td className="checkbox-column">
-                                        <label>
-                                            <input
-                                                type="checkbox"
-                                                checked={row.roles.includes('Compute')}
-                                                onChange={(event) => handleCheckboxChange(event, row, 'Compute')}
-                                            />
-                                            <span>HCI</span>
-                                        </label>
-                                        <br />
-                                        <label>
-                                            <input
-                                                type="checkbox"
-                                                checked={row.roles.includes('Control')}
-                                                onChange={(event) => handleCheckboxChange(event, row, 'Control')}
-                                            />
-                                            <span>Compute&Storage</span>
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <button onClick={() => handleDeploy(row)}>Deploy</button>
-                                        {loading && currentNode && currentNode.id === row.id && (
-                                            <div className="loader"></div>
-                                        )}
-                                        {deploymentCompleted && currentNode && currentNode.id === row.id && (
-                                            <div className="completed">Completed</div>
-                                        )}
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-                
-                <Sidebar />
-                <Footer />
-
-                {/* BMC Form */}
-                {/* {bmcFormVisible && (
-                    <div className="bmc-form">
-                        <h2>Enter BMC Details for {currentNode.hostname}</h2>
-                        <form onSubmit={handleBmcFormSubmit}>
-                            <label>
-                                BMC IP Address:
-                                <input
-                                    type="text"
-                                    value={bmcDetails.ip}
-                                    onChange={(e) => setBmcDetails({ ...bmcDetails, ip: e.target.value })}
-                                    required
-                                />
-                            </label>
-                            <label>
-                                BMC Username:
-                                <input
-                                    type="text"
-                                    value={bmcDetails.username}
-                                    onChange={(e) => setBmcDetails({ ...bmcDetails, username: e.target.value })}
-                                    required
-                                />
-                            </label>
-                            <label>
-                                BMC Password:
-                                <input
-                                    type="password"
-                                    value={bmcDetails.password}
-                                    onChange={(e) => setBmcDetails({ ...bmcDetails, password: e.target.value })}
-                                    required
-                                />
-                            </label>
-                            <div>
-                                <button type="submit">Submit</button>
-                                <button type="button" onClick={handleCancel}>Cancel</button>
-                            </div>
-                        </form>
-                    </div>
-                )}
- */}
             </div>
-        </div>
+            <div className="data-table-container">
+                <div className="container">
+                    <div className="data-table-container">
+                        <table className="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Sl No.</th>
+                                    <th>IP Address</th>
+                                    <th>Hostname</th>
+                                    <th>Roles</th>
+                                    <th>Deploy</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {currentRows.map((row, index) => (
+                                    <tr key={index}>
+                                        <td>{row.slNo}</td>
+                                        <td>{row.ipAddress}</td>
+                                        <td>{row.hostname}</td>
+                                        <td className="checkbox-column">
+                                            <label>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={row.roles.includes('HCI')}
+                                                    onChange={(event) => handleCheckboxChange(event, row, 'HCI')}
+                                                />
+                                                <span>HCI</span>
+                                            </label>
+                                            <br />
+                                            <label>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={row.roles.includes('Compute&Storage')}
+                                                    onChange={(event) => handleCheckboxChange(event, row, 'Compute&Storage')}
+                                                />
+                                                <span>Compute&Storage</span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <button
+                                                onClick={() => handleDeploy(row)}
+                                                disabled={row.roles.length === 0}
+                                            >
+                                                Deploy
+                                            </button>
+                                            {loading && currentNode && currentNode.id === row.id && (
+                                                <div className="loader"></div>
+                                            )}
+                                            {deploymentCompleted && currentNode && currentNode.id === row.id && (
+                                                <div className="completed">Completed</div>
+                                            )}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                        <div className="pagination">
+                            <button onClick={handlePreviousPage} disabled={currentPage === 1}>
+                                Previous
+                            </button>
+                            <button onClick={handleNextPage} disabled={indexOfLastRow >= roles.length}>
+                                Next
+                            </button>
+                        </div>
+                    </div>
+
+                    <Sidebar />
+                    <Footer />
+
+                    {/* BMC Form */}
+                    {bmcFormVisible && (
+                        <div className="bmc-form">
+                            <h2>Enter BMC Details for {currentNode.hostname}</h2>
+                            <form onSubmit={handleBmcFormSubmit}>
+                                <label>
+                                    BMC IP Address:
+                                    <input
+                                        type="text"
+                                        value={bmcDetails.ip}
+                                        onChange={(e) => setBmcDetails({ ...bmcDetails, ip: e.target.value })}
+                                        required
+                                    />
+                                </label>
+                                <label>
+                                    BMC Username:
+                                    <input
+                                        type="text"
+                                        value={bmcDetails.username}
+                                        onChange={(e) => setBmcDetails({ ...bmcDetails, username: e.target.value })}
+                                        required
+                                    />
+                                </label>
+                                <label>
+                                    BMC Password:
+                                    <input
+                                        type="password"
+                                        value={bmcDetails.password}
+                                        onChange={(e) => setBmcDetails({ ...bmcDetails, password: e.target.value })}
+                                        required
+                                    />
+                                </label>
+                                <div>
+                                    <button type="submit">Submit</button>
+                                    <button type="button" onClick={handleCancel}>Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                    )}
+
+                </div>
+            </div>
         </div>
     );
 };
