@@ -6,6 +6,7 @@ const authRoutes = require('./authRoutes'); // Adjust the path as needed
 const cors = require('cors');
 const loginRoutes = require('./loginRoutes'); // New file for login
 const nodemailer = require('nodemailer'); // Import nodemailer library
+const bcrypt = require('bcrypt'); // Import bcrypt library
 
 const app = express();
 app.use(cors());
@@ -74,8 +75,12 @@ app.post('/register', async (req, res) => {
   const nanoid = customAlphabet('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', 6);
   const id = nanoid(); // Generate unique ID with custom alphabet
 
+  // Hash the password
+  const saltRounds = 10;
+  const hashedPassword = await bcrypt.hash(password, saltRounds);
+
   const sql = 'INSERT INTO users (id, companyName, email, password) VALUES (?, ?, ?, ?)';
-  db.query(sql, [id, companyName, email, password], (err, result) => {
+  db.query(sql, [id, companyName, email, hashedPassword], (err, result) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ error: 'Error registering user' });
@@ -88,14 +93,13 @@ app.post('/register', async (req, res) => {
       cc: ['support@pinakastra.cloud'],
       subject: 'Welcome to Pinakastra!',
       text: `Hello ${companyName},\n\nWelcome to our platform! Your account has been successfully registered.
-    
 
 Here are your registration details:
 
 - Company Name:  ${companyName}
 - User ID:                 ${id}
 
-We look forward to support your success!
+We look forward to supporting your success!
 
 Best regards,
 The Pinakastra Cloud Team
