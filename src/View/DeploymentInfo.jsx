@@ -46,7 +46,7 @@ const DeploymentInfo = () => {
         .then(data => {
             console.log('Deployment response:', data);
             // Handle response if needed
-            navigate('/designatednodes');
+            navigate('/DesignatedNode');
         })
         .catch(error => {
             console.error('Error during deployment:', error);
