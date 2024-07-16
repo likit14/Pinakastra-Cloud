@@ -11,6 +11,12 @@ import subprocess
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
+# Mapping detailed OS names to simpler labels
+os_mapping = {
+    'Apple Mac OS X 10.7.0 (Lion) - 10.12 (Sierra) or iOS 4.1 - 9.3.3 (Darwin 10.0.0 - 16.4.0)': 'Apple',
+    # Add more mappings as needed
+}
+
 def get_local_network_ip():
     interfaces = netifaces.interfaces()
     for interface in interfaces:
@@ -33,7 +39,8 @@ def get_os_type(ip):
         nm.scan(ip, arguments='-O')  # OS detection
         os_info = nm[ip].get('osmatch', [])
         if os_info:
-            return os_info[0]['name']
+            os_name = os_info[0]['name']
+            return os_mapping.get(os_name, os_name)  # Return simplified label if available
     except Exception as e:
         print(f"Error scanning {ip}: {e}")
     return 'Unknown'
