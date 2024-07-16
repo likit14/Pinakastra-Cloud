@@ -13,7 +13,7 @@ const DataTable = () => {
     const [validatingNode, setValidatingNode] = useState(null);
     const [isScanning, setIsScanning] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 6;
+    const itemsPerPage = 4;
     const navigate = useNavigate();
     const [isRotating, setIsRotating] = useState(false);
 

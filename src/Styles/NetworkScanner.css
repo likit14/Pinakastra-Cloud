@@ -1,11 +1,11 @@
 .header {
-    margin-top: 5%;
+    /* margin-top: %; */
     margin-left: 12%;
     position: relative;
 }
 
 .data-table-container {
-    margin-top: 15%;
+    margin-top: 6.7%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -86,7 +86,8 @@
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    margin-top: 20px; /* Reduced margin */
+    margin-top: 0px; /* Reduced margin */
+    /* margin-bottom: 50px; */
     margin-left: 86%; /* Adjusted for layout */
 }
 
@@ -177,13 +178,15 @@
 }
 
 .back-button {
-    position: absolute;
-    bottom: 60px;
+    position: relative;
+    /* bottom: 60px; */
     left: 100px;
+    top: 10px;
     background: none;
     border: none;
     cursor: pointer;
     color: #000;
+    margin-bottom:-9%;
 }
 
 .back-button:hover {

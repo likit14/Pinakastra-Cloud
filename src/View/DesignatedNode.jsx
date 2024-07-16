@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from '../Components/sidebar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faArrowLeft}  from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import Footer from '../Components/footer';
-import '../Styles/DesignatedNode.css';
+import styles from '../Styles/DesignatedNode.module.css'; // Import CSS Modules
 
 const DesignatedNode = () => {
     const location = useLocation();
@@ -29,7 +29,7 @@ const DesignatedNode = () => {
     const [loading, setLoading] = useState(false);
     const [deploymentCompleted, setDeploymentCompleted] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-    const rowsPerPage = 5;
+    const rowsPerPage = 4; // Change this to 4 rows per page
 
     const handleCheckboxChange = (event, row, role) => {
         const isChecked = event.target.checked;
@@ -117,16 +117,16 @@ const DesignatedNode = () => {
 
     return (
         <div>
-            <div className='headers'>
-            <button className="back-button" onClick={handleBack}>
+            <div className={styles.headers1}>
+                <button className={styles.backbutton} onClick={handleBack}>
                     <FontAwesomeIcon icon={faArrowLeft} size="2x" />
                 </button>
                 <center><h1>Designated Nodes</h1></center>
             </div>
-            <div className="data-table-container">
+            <div className={styles['data-table-container1']}>
                 <div className="container">
-                    <div className="data-table-container">
-                        <table className="data-table">
+                    <div className={styles['data-table-container']}>
+                        <table className={styles['data-table']}>
                             <thead>
                                 <tr>
                                     <th>Sl No.</th>
@@ -142,7 +142,7 @@ const DesignatedNode = () => {
                                         <td>{row.slNo}</td>
                                         <td>{row.ipAddress}</td>
                                         <td>{row.hostname}</td>
-                                        <td className="checkbox-column">
+                                        <td className={styles['checkbox-column']}>
                                             <label>
                                                 <input
                                                     type="checkbox"
@@ -169,17 +169,17 @@ const DesignatedNode = () => {
                                                 Deploy
                                             </button>
                                             {loading && currentNode && currentNode.id === row.id && (
-                                                <div className="loader"></div>
+                                                <div className={styles.loader}></div>
                                             )}
                                             {deploymentCompleted && currentNode && currentNode.id === row.id && (
-                                                <div className="completed">Completed</div>
+                                                <div className={styles.completed}>Completed</div>
                                             )}
                                         </td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
-                        <div className="pagination">
+                        <div className={styles.pagination}>
                             <button onClick={handlePreviousPage} disabled={currentPage === 1}>
                                 Previous
                             </button>
@@ -190,11 +190,10 @@ const DesignatedNode = () => {
                     </div>
 
                     <Sidebar />
-                    <Footer />
 
                     {/* BMC Form */}
                     {bmcFormVisible && (
-                        <div className="bmc-form">
+                        <div className={styles['bmc-form']}>
                             <h2>Enter BMC Details for {currentNode.hostname}</h2>
                             <form onSubmit={handleBmcFormSubmit}>
                                 <label>
@@ -231,7 +230,6 @@ const DesignatedNode = () => {
                             </form>
                         </div>
                     )}
-
                 </div>
             </div>
         </div>
