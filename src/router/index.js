@@ -4,7 +4,7 @@ import Signup from "../View/Signup";
 import ErrorPageContainer from "../View/ErrorPageContainer";
 import DeploymentOptions from "../View/DeploymentOptions";
 import NetworkScanner from "../View/NetworkScanner"
-import DesignatedNodes from "../View/DesignatedNodes";
+import DesignatedNode from "../View/DesignatedNode";
 import DeploymentInfo from "../View/DeploymentInfo";
 export const router=createBrowserRouter([
     {
@@ -21,8 +21,8 @@ export const router=createBrowserRouter([
         element: <NetworkScanner/>
     },
     {
-        path: '/designatednodes',
-        element: <DesignatedNodes/>
+        path: '/designatednode',
+        element: <DesignatedNode/>
     },
     {
         path: '/deploymentinfo',

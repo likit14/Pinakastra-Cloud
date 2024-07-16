@@ -71,11 +71,12 @@ const DataTable = () => {
     };
 
     const handleDeploy = () => {
-        navigate('/designatednodes', { state: { selectedNodes: selectedRows } });
+        navigate('/DesignatedNode', { state: { selectedNodes: selectedRows } });
     };
 
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const paginatedNodes = nodes.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
@@ -120,7 +121,7 @@ const DataTable = () => {
                                         </tr>
                                     )}
                                     {!isScanning && paginatedNodes.map((node, index) => (
-                                        <tr key={index}>
+                                        <tr key={node.ip}>
                                             <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
                                             <td>{node.ip}</td>
                                             <td>{node.hostname}</td>
@@ -142,7 +143,14 @@ const DataTable = () => {
                                                 )}
                                             </td>
                                             <td className="checkbox-column">
-                                                <input type="checkbox" onChange={(event) => handleCheckboxChange(event, node)} />
+                                                <label className="checkbox-label">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={selectedRows.some(selectedRow => selectedRow.ip === node.ip)}
+                                                        onChange={(event) => handleCheckboxChange(event, node)}
+                                                    />
+                                                    <span className="checkbox-custom"></span>
+                                                </label>
                                             </td>
                                         </tr>
                                     ))}

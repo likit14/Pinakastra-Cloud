@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from '../Components/sidebar';
 import Footer from '../Components/footer';
-import '../Styles/DesignatedNodes.css';
+import '../Styles/DesignatedNode.css';
 
-const DesignatedNodes = () => {
+const DesignatedNode = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [selectedRows, setSelectedRows] = useState(location.state.selectedNodes || []);
@@ -226,4 +226,4 @@ const DesignatedNodes = () => {
     );
 };
 
-export default DesignatedNodes;
+export default DesignatedNode;

@@ -5,11 +5,13 @@
 }
 
 .data-table-container {
-    margin-top: 11%;
+    margin-top: 13%;
+    display: flex;
     justify-content: center;
     align-items: center;
-    padding: 30px;
-    margin-left: 3.8%;
+    padding: 20px; /* Reduced padding */
+    margin-left: 15%;
+    width: 80%; /* Adjust width */
 }
 
 .data-table-header {
@@ -17,9 +19,8 @@
 }
 
 .data-table {
-    margin-left: 5%;
-    width: 50%;
-    max-width: 100%;
+    width: 100%; /* Make table take full width of container */
+    max-width: 50%;
     border-collapse: collapse;
     border: 1px solid #dddddd;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -33,7 +34,7 @@
 
 .data-table th, .data-table td {
     border: 1px solid #dddddd;
-    padding: 15px;
+    padding: 8px; /* Reduced padding */
     text-align: left;
 }
 
@@ -57,7 +58,7 @@
 }
 
 .data-table button {
-    padding: 8px 12px;
+    padding: 6px 10px; /* Reduced padding */
     background-color: #4CAF50;
     color: white;
     border: none;
@@ -81,12 +82,12 @@
 .next-button {
     background-color: #4CAF50;
     color: white;
-    padding: 10px 25px;
+    padding: 8px 20px; /* Reduced padding */
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    margin-top: 25px;
-    margin-left: 101%;
+    margin-top: 20px; /* Reduced margin */
+    margin-left: 90%; /* Adjusted for layout */
 }
 
 .checkbox-column input[type="checkbox"] {
@@ -149,7 +150,7 @@
 }
 
 .pagination button {
-    padding: 10px 15px;
+    padding: 8px 12px; /* Reduced padding */
     margin: 0 5px;
     background-color: #f2f2f2;
     border: 1px solid #dddddd;
@@ -169,9 +170,8 @@
     to {
       transform: rotate(360deg);
     }
-  }
+}
   
-  .rotating {
+.rotating {
     animation: rotate 1s linear infinite;
-  }
-  
+}

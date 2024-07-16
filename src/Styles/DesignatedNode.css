@@ -6,7 +6,6 @@
     position: relative;
 }
 
-
 .data-table-container {
     display: flex;
     flex-direction: column;
@@ -14,7 +13,8 @@
     /* align-items: center; */
     height: 100%;
     padding: 20px; /* Adjust padding as needed */
-    margin-bottom: 19%;
+    margin-right: 200px;
+    margin-bottom: 30%;
 }
 
 .data-table-header {
