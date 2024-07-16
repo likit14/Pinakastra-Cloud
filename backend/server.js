@@ -32,6 +32,7 @@ const db = mysql.createConnection({
   user: 'root', // Change this to your MySQL username
   password: 'Likith@172323', // Change this to your MySQL password
   database: 'standalone', // Change this to your MySQL database name
+  port: 3306
 });
 
 db.connect(err => {

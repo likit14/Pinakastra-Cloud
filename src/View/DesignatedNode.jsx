@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from '../Components/sidebar';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import Footer from '../Components/footer';
-import styles from '../Styles/DesignatedNode.module.css'; // Import CSS Modules
+import '../Styles/DesignatedNode.module.css';
 
-const DesignatedNode = () => {
+const DesignatedNodes = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [selectedRows, setSelectedRows] = useState(location.state.selectedNodes || []);
@@ -29,7 +27,7 @@ const DesignatedNode = () => {
     const [loading, setLoading] = useState(false);
     const [deploymentCompleted, setDeploymentCompleted] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-    const rowsPerPage = 4; // Change this to 4 rows per page
+    const rowsPerPage = 5;
 
     const handleCheckboxChange = (event, row, role) => {
         const isChecked = event.target.checked;
@@ -58,38 +56,37 @@ const DesignatedNode = () => {
         setBmcFormVisible(true);
     };
 
-    const handleBack = () => {
-        navigate(-1); // Navigate to the previous page in history
-        setTimeout(() => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }, 100); // Delay to ensure navigation completes before scrolling
-    };
-    
     const handleBmcFormSubmit = async (event) => {
         event.preventDefault();
         setLoading(true);
 
+        // Simulate API call or actual deployment logic here
         try {
             const response = await fetch('http://localhost:8000/set_pxe_boot', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ ...bmcDetails, role: currentNode.roles[0] }) // Assuming only one role is selected
+                body: JSON.stringify({ ...bmcDetails, roles: currentNode.roles })
             });
 
             const result = await response.json();
             console.log(result);
 
+            // Mark deployment as completed
             setDeploymentCompleted(true);
 
+            // Optionally reset form state
             setBmcDetails({
                 ip: '',
                 username: '',
                 password: ''
             });
 
+            // Close the form after successful deployment
             setBmcFormVisible(false);
+
+            // Navigate to deployment info page
             navigate('/deploymentinfo');
         } catch (error) {
             console.error('Deployment error:', error);
@@ -117,16 +114,13 @@ const DesignatedNode = () => {
 
     return (
         <div>
-            <div className={styles.headers1}>
-                <button className={styles.backbutton} onClick={handleBack}>
-                    <FontAwesomeIcon icon={faArrowLeft} size="2x" />
-                </button>
+            <div className='headers'>
                 <center><h1>Designated Nodes</h1></center>
             </div>
-            <div className={styles['data-table-container1']}>
+            <div className="data-table-container">
                 <div className="container">
-                    <div className={styles['data-table-container']}>
-                        <table className={styles['data-table']}>
+                    <div className="data-table-container">
+                        <table className="data-table">
                             <thead>
                                 <tr>
                                     <th>Sl No.</th>
@@ -142,7 +136,7 @@ const DesignatedNode = () => {
                                         <td>{row.slNo}</td>
                                         <td>{row.ipAddress}</td>
                                         <td>{row.hostname}</td>
-                                        <td className={styles['checkbox-column']}>
+                                        <td className="checkbox-column">
                                             <label>
                                                 <input
                                                     type="checkbox"
@@ -169,17 +163,17 @@ const DesignatedNode = () => {
                                                 Deploy
                                             </button>
                                             {loading && currentNode && currentNode.id === row.id && (
-                                                <div className={styles.loader}></div>
+                                                <div className="loader"></div>
                                             )}
                                             {deploymentCompleted && currentNode && currentNode.id === row.id && (
-                                                <div className={styles.completed}>Completed</div>
+                                                <div className="completed">Completed</div>
                                             )}
                                         </td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
-                        <div className={styles.pagination}>
+                        <div className="pagination">
                             <button onClick={handlePreviousPage} disabled={currentPage === 1}>
                                 Previous
                             </button>
@@ -190,10 +184,11 @@ const DesignatedNode = () => {
                     </div>
 
                     <Sidebar />
+                    <Footer />
 
                     {/* BMC Form */}
                     {bmcFormVisible && (
-                        <div className={styles['bmc-form']}>
+                        <div className="bmc-form">
                             <h2>Enter BMC Details for {currentNode.hostname}</h2>
                             <form onSubmit={handleBmcFormSubmit}>
                                 <label>
@@ -230,10 +225,11 @@ const DesignatedNode = () => {
                             </form>
                         </div>
                     )}
+
                 </div>
             </div>
         </div>
     );
 };
 
-export default DesignatedNode;
+export default DesignatedNodes;
