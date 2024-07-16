@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../Components/sidebar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowsRotate } from '@fortawesome/free-solid-svg-icons';
+import { faArrowsRotate, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import '../Styles/NetworkScanner.css';
 
 const DataTable = () => {
@@ -72,6 +72,7 @@ const DataTable = () => {
 
     const handleDeploy = () => {
         navigate('/DesignatedNode', { state: { selectedNodes: selectedRows } });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const handlePageChange = (newPage) => {
@@ -79,11 +80,22 @@ const DataTable = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
+    const handleBack = () => {
+        navigate(-1); // Navigate to the previous page in history
+        setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 100); // Delay to ensure navigation completes before scrolling
+    };
+    
+    
     const paginatedNodes = nodes.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
     return (
         <div>
             <div className='header'>
+                <button className="back-button" onClick={handleBack}>
+                    <FontAwesomeIcon icon={faArrowLeft} size="2x" />
+                </button>
                 <center>
                     <h1>Discovered Machines
                         <button className={`button ${isRotating ? 'rotating' : ''}`} onClick={handleRefresh}>

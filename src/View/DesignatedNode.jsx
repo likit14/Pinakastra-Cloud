@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from '../Components/sidebar';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faArrowLeft}  from '@fortawesome/free-solid-svg-icons';
 import Footer from '../Components/footer';
 import '../Styles/DesignatedNode.css';
 
@@ -56,6 +58,13 @@ const DesignatedNode = () => {
         setBmcFormVisible(true);
     };
 
+    const handleBack = () => {
+        navigate(-1); // Navigate to the previous page in history
+        setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 100); // Delay to ensure navigation completes before scrolling
+    };
+    
     const handleBmcFormSubmit = async (event) => {
         event.preventDefault();
         setLoading(true);
@@ -109,6 +118,9 @@ const DesignatedNode = () => {
     return (
         <div>
             <div className='headers'>
+            <button className="back-button" onClick={handleBack}>
+                    <FontAwesomeIcon icon={faArrowLeft} size="2x" />
+                </button>
                 <center><h1>Designated Nodes</h1></center>
             </div>
             <div className="data-table-container">
