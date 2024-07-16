@@ -5,7 +5,7 @@
 }
 
 .data-table-container {
-    margin-top: 13%;
+    margin-top: 15%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -87,7 +87,7 @@
     border-radius: 4px;
     cursor: pointer;
     margin-top: 20px; /* Reduced margin */
-    margin-left: 90%; /* Adjusted for layout */
+    margin-left: 86%; /* Adjusted for layout */
 }
 
 .checkbox-column input[type="checkbox"] {
@@ -174,4 +174,18 @@
   
 .rotating {
     animation: rotate 1s linear infinite;
+}
+
+.back-button {
+    position: absolute;
+    bottom: 60px;
+    left: 100px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #000;
+}
+
+.back-button:hover {
+    color: #007bff;
 }
