@@ -9,7 +9,7 @@ def set_pxe_boot(bmc_ip, bmc_username, bmc_password, role):
         # Set the boot device to PXE
         ipmi_cmd.set_bootdev('network')
 
-        # Depending on the role, additional configuration can be added here
+        # Additional configuration based on the role
         if role == 'HCI':
             # Additional configuration for HCI
             pass

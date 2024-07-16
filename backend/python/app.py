@@ -83,16 +83,21 @@ def scan_network_api():
 
 @app.route('/set_pxe_boot', methods=['POST'])
 def set_pxe_boot():
-    data = request.get_json()
-    bmc_ip = data.get('ip')
-    bmc_username = data.get('username')
-    bmc_password = data.get('password')
-
+    data = request.json
+    bmc_ip = data['ip']
+    bmc_username = data['username']
+    bmc_password = data['password']
+    role = data['role']
+    
     try:
-        result = subprocess.check_output(['python', 'set_pxe_boot.py', bmc_ip, bmc_username, bmc_password])
-        return jsonify({"result": result.decode("utf-8")})
-    except subprocess.CalledProcessError as e:
-        return jsonify({"error": str(e)}), 500
+        result = subprocess.run(['python3', 'set_pxe_boot.py', bmc_ip, bmc_username, bmc_password, role],
+                                capture_output=True, text=True)
+        if result.returncode == 0:
+            return jsonify({"status": "success", "message": result.stdout})
+        else:
+            return jsonify({"status": "error", "message": result.stderr})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000)

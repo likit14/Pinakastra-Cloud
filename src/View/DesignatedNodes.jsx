@@ -60,33 +60,27 @@ const DesignatedNodes = () => {
         event.preventDefault();
         setLoading(true);
 
-        // Simulate API call or actual deployment logic here
         try {
             const response = await fetch('http://localhost:8000/set_pxe_boot', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ ...bmcDetails, roles: currentNode.roles })
+                body: JSON.stringify({ ...bmcDetails, role: currentNode.roles[0] }) // Assuming only one role is selected
             });
 
             const result = await response.json();
             console.log(result);
 
-            // Mark deployment as completed
             setDeploymentCompleted(true);
 
-            // Optionally reset form state
             setBmcDetails({
                 ip: '',
                 username: '',
                 password: ''
             });
 
-            // Close the form after successful deployment
             setBmcFormVisible(false);
-
-            // Navigate to deployment info page
             navigate('/deploymentinfo');
         } catch (error) {
             console.error('Deployment error:', error);
