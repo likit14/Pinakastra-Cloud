@@ -19,8 +19,10 @@ os_mapping = {
     'Linux 2.6.32': 'Linux',
     'Linux 3.2 - 4.9': 'Linux',
     'Linux 4.15 - 5.6': 'Linux',
+
     # Add more mappings as needed
 }
+
 def get_local_network_ip():
     interfaces = netifaces.interfaces()
     for interface in interfaces:
@@ -48,6 +50,12 @@ def get_os_type(ip):
         print(f"Error scanning {ip}: {e}")
     return 'Unknown'
 
+def resolve_hostname(ip):
+    try:
+        return socket.gethostbyaddr(ip)[0]
+    except socket.herror:
+        return 'Unknown'
+
 def scan_network(network):
     arp_request = ARP(pdst=str(network))
     broadcast = Ether(dst="ff:ff:ff:ff:ff:ff")
@@ -63,16 +71,15 @@ def scan_network(network):
                 'mac': received.hwsrc,
                 'last_seen': datetime.now().strftime('%Y-%m-%d')
             }
-            try:
-                node_info['hostname'] = socket.gethostbyaddr(received.psrc)[0]
-            except socket.herror:
-                node_info['hostname'] = 'Unknown'
-            
+            futures.append(executor.submit(resolve_hostname, received.psrc))
             futures.append(executor.submit(get_os_type, received.psrc))
             active_nodes.append(node_info)
 
-        for i, future in enumerate(concurrent.futures.as_completed(futures)):
-            active_nodes[i]['os_type'] = future.result()
+        for i in range(0, len(futures), 2):
+            hostname_future = futures[i]
+            os_type_future = futures[i + 1]
+            active_nodes[i // 2]['hostname'] = hostname_future.result()
+            active_nodes[i // 2]['os_type'] = os_type_future.result()
 
     return active_nodes
 
