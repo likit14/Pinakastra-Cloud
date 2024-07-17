@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../Components/sidebar';
 import Footer from '../Components/footer';
-import '../Styles/DeploymentInfo.css';
+import styles from "../Styles/DesignatedNode.module.css"; // Import CSS Modules
 
 const DeploymentInfo = () => {
     const navigate = useNavigate();
@@ -55,11 +55,11 @@ const DeploymentInfo = () => {
     };
 
     return (
-        <div className="data-table-container">
+        <div className={styles["data-table-container"]}>
             <h1>Deployment Info</h1>
-            <div className="container">
-                <div className="data-table-container">
-                    <table className="data-table">
+            <div className={styles.container}>
+                <div className={styles["data-table-container"]}>
+                    <table className={styles["data-table"]}>
                         <thead>
                             <tr>
                                 <th>Sl No.</th>
@@ -83,7 +83,7 @@ const DeploymentInfo = () => {
                 <Sidebar />
                 <Footer />
                 <button
-                    className="button-deploy"
+                    className={styles["button-deploy"]}
                     onClick={handleDeploy}
                     disabled={!selectedRow}
                 >

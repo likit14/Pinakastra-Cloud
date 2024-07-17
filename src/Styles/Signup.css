@@ -56,7 +56,7 @@ body {
 }
 
 .registration-form input:focus {
-  border-color: #007bff;
+  border-color: #2596be;
   box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);  /* Smooth focus effect */
   outline: none;
   transform: scale(1.02);  /* Slightly increase the size */
@@ -66,20 +66,20 @@ body {
 }
 
 .registration-form input:hover {
-  border-color: #007bff;
+  border-color: #2596be;
   box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
   transform: scale(1.02); /* Slightly increase the size */
 }
 
 .registration-form input:focus {
-  border-color: #007bff;
+  border-color: #2596be;
   box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
   outline: none;
 }
 
 .registration-form button {
   padding: 10px 15px;
-  background-color: #007bff;
+  background-color: #2596be;
   border: none;
   color: white;
   cursor: pointer;
@@ -101,9 +101,9 @@ body {
 
 .success-message {
   padding: 20px;
-  border: 1px solid #007bff;
+  border: 1px solid #2596be;
   background-color: #f0f8f0;
-  color: #007bff;
+  color: #2596be;
   border-radius: 10px;
   text-align: center;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -130,7 +130,7 @@ body {
 }
 
 .login-prompt a {
-  color: #007bff;
+  color: #2596be;
   text-decoration: none;
 }
 

@@ -55,21 +55,21 @@ body {
 }
 
 .login-form input:focus {
-  border-color: #007bff;
+  border-color: #2596be;
   box-shadow: 0 0 8px rgba(0, 123, 255, 0.2); /* Smooth focus effect */
   outline: none;
   transform: scale(1.02); /* Slightly increase the size */
 }
 
 .login-form input:hover {
-  border-color: #007bff;
+  border-color: #2596be;
   box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
   transform: scale(1.02); /* Slightly increase the size */
 }
 
 .login-form button {
   padding: 10px 15px;
-  background-color: #007bff;
+  background-color: #2596be;
   border: none;
   color: white;
   cursor: pointer;
@@ -99,7 +99,7 @@ body {
 }
 
 .login-prompt a {
-  color: #007bff;
+  color: #2596be;
   text-decoration: none;
 }
 

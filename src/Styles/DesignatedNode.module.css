@@ -209,14 +209,14 @@ body {
   }
   
   .bmc-form input:focus {
-    border-color: #007bff;
+    border-color: #2596be;
     box-shadow: 0 0 8px rgba(0, 123, 255, 0.2); /* Smooth focus effect */
     outline: none;
     transform: scale(1.02); /* Slightly increase the size */
   }
   
   .bmc-form input:hover {
-    border-color: #007bff;
+    border-color: #2596be;
     box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
     transform: scale(1.02); /* Slightly increase the size */
   }
@@ -290,7 +290,7 @@ body {
 }
 
 .backbutton:hover {
-    color: #007bff;
+    color: #2596be;
 }
 /* Add styles for pagination */
 .pagination-button {
