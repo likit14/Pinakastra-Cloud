@@ -1,0 +1,8 @@
+flask
+flask-cors
+scapy
+netifaces
+python-nmap
+requests
+pyghmi
+aiohttp

@@ -1,3 +1,13 @@
+.container{
+    display: flex;
+    min-height: 100vh;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding-top:1%;
+    padding-left: 20%;
+    width:70%;
+}
 .headers1 {
     margin-left: 10%;
     position: relative;
@@ -23,7 +33,6 @@
     border: 1px solid #dddddd;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     background-color: #ffffff;
-    margin-top: -370px;
     margin-left: 100px;
 }
 
@@ -55,7 +64,7 @@
 
 .data-table button {
     padding: 8px 12px;
-    background-color: #4CAF50;
+    background-color: #2596be;
     color: white;
     border: none;
     cursor: pointer;
@@ -63,7 +72,7 @@
 }
 
 .data-table button:hover {
-    background-color: #45a049;
+    background-color: #2596be;
 }
 
 body {
@@ -71,7 +80,7 @@ body {
 }
 
 .button-deploy {
-    background-color: #4CAF50;
+    background-color: #2596be;
     color: white;
     padding: 10px 20px;
     border: none;
@@ -107,12 +116,12 @@ body {
 }
 
 .checkbox-column input[type="checkbox"]:checked {
-    background-color: #4CAF50;
-    border-color: #4CAF50;
+    background-color: #2596be;
+    border-color: #2596be;
 }
 
 .checkbox-column input[type="checkbox"]:checked + span {
-    color: #4CAF50;
+    color: #2596be;
 }
 
 .checkbox-column input[type="checkbox"]:checked::after {
@@ -163,11 +172,16 @@ body {
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     z-index: 1000;
+    border-radius: 3%;
+    margin-left: 5%;
 }
 
 .bmc-form h2 {
     text-align: center;
     margin-bottom: 10px;
+    padding: 7%;
+    font-size: 22px;
+    
 }
 
 .bmc-form form {
@@ -178,21 +192,39 @@ body {
 
 .bmc-form label {
     margin: 10px 0;
+    font-size: 15px;
 }
 
 .bmc-form input {
     width: 100%;
-    padding: 8px;
-    border: 1px solid #cccccc;
+    padding: 5px;
+    border: 1px solid #D3D3D3;
     border-radius: 4px;
     box-sizing: border-box;
-    margin-top: 5px;
+    transition: all 0.3s ease-in-out; /* Smooth transition */
 }
+  
+  .bmc-form input::placeholder {
+    color: #aaa;
+  }
+  
+  .bmc-form input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.2); /* Smooth focus effect */
+    outline: none;
+    transform: scale(1.02); /* Slightly increase the size */
+  }
+  
+  .bmc-form input:hover {
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+    transform: scale(1.02); /* Slightly increase the size */
+  }
 
 .bmc-form button {
     margin-top: 10px;
     padding: 8px 16px;
-    background-color: #4CAF50;
+    background-color: #2596be;
     color: white;
     border: none;
     border-radius: 4px;
@@ -206,7 +238,7 @@ body {
 
 .loader {
     border: 4px solid rgba(0, 0, 0, 0.1);
-    border-top: 4px solid #4CAF50;
+    border-top: 4px solid #2596be;
     border-radius: 50%;
     width: 16px;
     height: 16px;
@@ -216,7 +248,7 @@ body {
 }
 
 .completed {
-    color: #4CAF50;
+    color: #2596be;
     font-weight: bold;
     display: inline-block;
     margin-left: 10px;
@@ -248,7 +280,7 @@ body {
 .backbutton {
     position: relative;
     /* bottom: 60px; */
-    left: 136px;
+    left: 145px;
     top: 10px;   
     background: none;
     border: none;
@@ -259,4 +291,25 @@ body {
 
 .backbutton:hover {
     color: #007bff;
-}    
+}
+/* Add styles for pagination */
+.pagination-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;  
+}
+
+.pagination-button button {
+    padding: 8px 12px; /* Reduced padding */
+    margin: 0 5px;
+    background-color: #f2f2f2;
+    border: 1px solid #dddddd;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.pagination-button button:disabled {
+    background-color: #2596be;
+    color: white;
+}

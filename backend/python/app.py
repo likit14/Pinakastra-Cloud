@@ -7,6 +7,7 @@ from scapy.all import ARP, Ether, srp
 import nmap
 import netifaces
 import subprocess
+import concurrent.futures
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -14,18 +15,21 @@ CORS(app)  # Enable CORS for all routes
 # Mapping detailed OS names to simpler labels
 os_mapping = {
     'Apple Mac OS X 10.7.0 (Lion) - 10.12 (Sierra) or iOS 4.1 - 9.3.3 (Darwin 10.0.0 - 16.4.0)': 'Apple',
+    'Linux 2.6.32 - 3.13': 'Linux',
+    'Linux 2.6.32': 'Linux',
+    'Linux 3.2 - 4.9': 'Linux',
+    'Linux 4.15 - 5.6': 'Linux',
     # Add more mappings as needed
 }
-
 def get_local_network_ip():
     interfaces = netifaces.interfaces()
     for interface in interfaces:
         addresses = netifaces.ifaddresses(interface)
-        if netifaces.AF_INET in addresses:  # Check if the interface has IPv4 address
+        if netifaces.AF_INET in addresses:  # Check if the interface has an IPv4 address
             for link in addresses[netifaces.AF_INET]:
                 if 'addr' in link and not link['addr'].startswith('127.'):
                     return link['addr']
-    return None  # Return None if no suitable IP address found
+    return None  # Return None if no suitable IP address is found
 
 def get_network_range(local_ip):
     ip_interface = ipaddress.IPv4Interface(local_ip + '/24')
@@ -33,7 +37,6 @@ def get_network_range(local_ip):
     return network
 
 def get_os_type(ip):
-    # Use nmap to detect the OS
     nm = nmap.PortScanner()
     try:
         nm.scan(ip, arguments='-O')  # OS detection
@@ -52,21 +55,24 @@ def scan_network(network):
     answered_list = srp(arp_request_broadcast, timeout=2, verbose=False)[0]
 
     active_nodes = []
-    for sent, received in answered_list:
-        node_info = {
-            'ip': received.psrc,
-            'mac': received.hwsrc,
-            'last_seen': datetime.now().strftime('%Y-%m-%d')
-        }
-        try:
-            node_info['hostname'] = socket.gethostbyaddr(received.psrc)[0]
-        except socket.herror:
-            node_info['hostname'] = 'Unknown'
-        
-        # Get the OS type
-        node_info['os_type'] = get_os_type(received.psrc)
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        futures = []
+        for sent, received in answered_list:
+            node_info = {
+                'ip': received.psrc,
+                'mac': received.hwsrc,
+                'last_seen': datetime.now().strftime('%Y-%m-%d')
+            }
+            try:
+                node_info['hostname'] = socket.gethostbyaddr(received.psrc)[0]
+            except socket.herror:
+                node_info['hostname'] = 'Unknown'
+            
+            futures.append(executor.submit(get_os_type, received.psrc))
+            active_nodes.append(node_info)
 
-        active_nodes.append(node_info)
+        for i, future in enumerate(concurrent.futures.as_completed(futures)):
+            active_nodes[i]['os_type'] = future.result()
 
     return active_nodes
 

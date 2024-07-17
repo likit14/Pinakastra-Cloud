@@ -59,7 +59,7 @@
 
 .data-table button {
     padding: 6px 10px; /* Reduced padding */
-    background-color: #007bff;
+    background-color: #2596be;
     color: white;
     border: none;
     cursor: pointer;
@@ -67,12 +67,12 @@
 }
 
 .data-table button:hover {
-    background-color: #45a049;
+    background-color: #679ad1;
 }
 
 .button {
     background-color:#f0f0f0;
-    color: #007bff;
+    color: #2596be;
     padding: 0px 20px;
     border: none;
     border-radius: 4px;
@@ -80,7 +80,7 @@
 }
 
 .next-button {
-    background-color: #007bff;
+    background-color: #2596be;
     color: white;
     padding: 8px 20px; 
     border: none;
@@ -103,8 +103,8 @@
 }
 
 .checkbox-column input[type="checkbox"]:checked {
-    background-color: #007bff;
-    border-color: #007bff;
+    background-color: #2596be;
+    border-color: #2596be;
 }
 
 .checkbox-column input[type="checkbox"]:checked::after {
@@ -119,7 +119,7 @@
 
 .loader {
     border: 4px solid rgba(0, 0, 0, 0.1);
-    border-top: 4px solid #007bff;
+    border-top: 4px solid #2596be;
     border-radius: 50%;
     width: 16px;
     height: 16px;
@@ -190,5 +190,5 @@
 }
 
 .back-button:hover {
-    color: #007bff;
+    color: #2596be;
 }

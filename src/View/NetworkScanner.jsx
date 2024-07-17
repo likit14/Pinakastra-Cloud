@@ -114,7 +114,7 @@ const DataTable = () => {
                                         <th>Sl<br />No.</th>
                                         <th>IP Address</th>
                                         <th>Hostname</th>
-                                        <th>OS Type</th>
+                                        <th>OSType</th>
                                         <th>Validate</th>
                                         <th>Validation<br />Result</th>
                                         <th>Info</th>
@@ -139,14 +139,14 @@ const DataTable = () => {
                                             <td>{node.hostname}</td>
                                             <td>{node.os_type}</td>
                                             <td>
-                                                <button
+                                                <button 
                                                     disabled={validatingNode !== null && validatingNode.ip === node.ip}
                                                     onClick={() => validateNode(node)}
                                                 >
                                                     {validatingNode !== null && validatingNode.ip === node.ip ? 'Validating...' : 'Validate'}
                                                 </button>
                                             </td>
-                                            <td style={{ color: 'green', fontFamily: 'Arial, sans-serif' }}>
+                                            <td style={{ color: 'red', fontFamily: 'Arial, sans-serif' }}>
                                                 {validationResults[node.ip] ? validationResults[node.ip].status : 'Not validated'}
                                             </td>
                                             <td>
