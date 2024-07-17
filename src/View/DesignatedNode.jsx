@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Sidebar from "../Components/sidebar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import Footer from "../Components/footer";
 import styles from "../Styles/DesignatedNode.module.css"; // Import CSS Modules
 
 const DesignatedNode = () => {

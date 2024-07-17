@@ -64,7 +64,7 @@
 
 .data-table button {
     padding: 8px 12px;
-    background-color: #4CAF50;
+    background-color: #2596be;
     color: white;
     border: none;
     cursor: pointer;
@@ -80,7 +80,7 @@ body {
 }
 
 .button-deploy {
-    background-color: #4CAF50;
+    background-color: #2596be;
     color: white;
     padding: 10px 20px;
     border: none;
@@ -116,12 +116,12 @@ body {
 }
 
 .checkbox-column input[type="checkbox"]:checked {
-    background-color: #4CAF50;
-    border-color: #4CAF50;
+    background-color: #2596be;
+    border-color: #2596be;
 }
 
 .checkbox-column input[type="checkbox"]:checked + span {
-    color: #4CAF50;
+    color: #2596be;
 }
 
 .checkbox-column input[type="checkbox"]:checked::after {
@@ -224,7 +224,7 @@ body {
 .bmc-form button {
     margin-top: 10px;
     padding: 8px 16px;
-    background-color: #4CAF50;
+    background-color: #2596be;
     color: white;
     border: none;
     border-radius: 4px;
@@ -238,7 +238,7 @@ body {
 
 .loader {
     border: 4px solid rgba(0, 0, 0, 0.1);
-    border-top: 4px solid #4CAF50;
+    border-top: 4px solid #2596be;
     border-radius: 50%;
     width: 16px;
     height: 16px;
@@ -248,7 +248,7 @@ body {
 }
 
 .completed {
-    color: #4CAF50;
+    color: #2596be;
     font-weight: bold;
     display: inline-block;
     margin-left: 10px;
@@ -280,7 +280,7 @@ body {
 .backbutton {
     position: relative;
     /* bottom: 60px; */
-    left: 136px;
+    left: 145px;
     top: 10px;   
     background: none;
     border: none;
@@ -310,7 +310,7 @@ body {
 }
 
 .pagination-button button:disabled {
-    background-color: #4CAF50;
+    background-color: #2596be;
     color: white;
 }
     
