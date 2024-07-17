@@ -72,7 +72,7 @@
 
 .data-table button {
     padding: 8px 12px;
-    background-color: #4CAF50;
+    background-color: #007bff;
     color: white;
     border: none;
     cursor: pointer;
@@ -87,7 +87,7 @@ body {
   }
 
   .button-deploy {
-    background-color: #4CAF50;
+    background-color: #007bff;
     color: white;
     padding: 10px 20px;
     border: none;
@@ -110,8 +110,8 @@ body {
 }
 
 .checkbox-column input[type="checkbox"]:checked {
-    background-color: #4CAF50;
-    border-color: #4CAF50;
+    background-color: #007bff;
+    border-color: #007bff;
 }
 
 .checkbox-column input[type="checkbox"]:checked::after {
