@@ -20,7 +20,9 @@ os_mapping = {
     'Linux 3.2 - 4.9': 'Linux',
     'Linux 4.15 - 5.6': 'Linux',
     'FreeBSD 6.2-RELEASE': 'FreeBSD 6.2',
-    'Fortinet FortiGate 100D firewall': 'Fortinet 100D firewall'
+    'Fortinet FortiGate 100D firewall': 'Fortinet 100D firewall',
+    'Cisco CP 8945 VoIP phone': 'Cisco8945 VoIP phone',
+    'Citrix Access Gateway VPN gateway': 'Citrix AccessGateway VPN'
     # Add more mappings as needed
 }
 
