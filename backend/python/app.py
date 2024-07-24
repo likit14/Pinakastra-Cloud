@@ -15,14 +15,16 @@ CORS(app)  # Enable CORS for all routes
 # Mapping detailed OS names to simpler labels
 os_mapping = {
     'Apple Mac OS X 10.7.0 (Lion) - 10.12 (Sierra) or iOS 4.1 - 9.3.3 (Darwin 10.0.0 - 16.4.0)': 'Apple',
+    'Apple OS X 10.11 (El Capitan) - 10.12 (Sierra) or iOS 10.1 - 10.2 (Darwin 15.4.0 - 16.6.0)': 'Apple',
     'Linux 2.6.32 - 3.13': 'Linux',
     'Linux 2.6.32': 'Linux',
-    'Linux 3.2 - 4.9': 'Linux',
+    'Linux 3.2 - 4.9': 'Linux', 
     'Linux 4.15 - 5.6': 'Linux',
     'FreeBSD 6.2-RELEASE': 'FreeBSD 6.2',
     'Fortinet FortiGate 100D firewall': 'Fortinet 100D firewall',
     'Cisco CP 8945 VoIP phone': 'Cisco8945 VoIP phone',
-    'Citrix Access Gateway VPN gateway': 'Citrix AccessGateway VPN'
+    'Citrix Access Gateway VPN gateway': 'Citrix AccessGateway VPN',
+    'Apple OS X 10.11 (El Capitan) - 10.12 (Sierra) or iOS 10.1 - 10.2 (Darwin 15.4.0 - 16.6.0)': 'Apple'
     # Add more mappings as needed
 }
 
@@ -41,6 +43,11 @@ def get_network_range(local_ip):
     network = ip_interface.network
     return network
 
+def truncate_os_name(os_name, max_length=20):
+    if len(os_name) > max_length:
+        return os_name[:max_length] + '...'
+    return os_name
+
 def get_os_type(ip):
     nm = nmap.PortScanner()
     try:
@@ -48,7 +55,8 @@ def get_os_type(ip):
         os_info = nm[ip].get('osmatch', [])
         if os_info:
             os_name = os_info[0]['name']
-            return os_mapping.get(os_name, os_name)  # Return simplified label if available
+            simplified_name = os_mapping.get(os_name, os_name)  # Use simplified label if available
+            return truncate_os_name(simplified_name)  # Truncate if necessary
     except Exception as e:
         print(f"Error scanning {ip}: {e}")
     return 'Unknown'

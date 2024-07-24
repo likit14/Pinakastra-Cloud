@@ -5,6 +5,7 @@ import ErrorPageContainer from "../View/ErrorPageContainer";
 import DeploymentOptions from "../View/DeploymentOptions";
 import NetworkScanner from "../View/NetworkScanner"
 import DesignatedNode from "../View/DesignatedNode";
+import Dashboard  from "../View/Dashboard";
 export const router=createBrowserRouter([
     {
     path:'/',
@@ -26,6 +27,10 @@ export const router=createBrowserRouter([
     {
         path: '/designatednode',
         element: <DesignatedNode/>
+    },
+    {
+        path: '/dashboard',
+        element: <Dashboard/>
     }
     ]
     },
