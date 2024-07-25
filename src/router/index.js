@@ -3,9 +3,10 @@ import App from '../App'
 import Signup from "../View/Signup";
 import ErrorPageContainer from "../View/ErrorPageContainer";
 import DeploymentOptions from "../View/DeploymentOptions";
-import NetworkScanner from "../View/NetworkScanner"
+import NetworkScanner from "../View/NetworkScanner";
 import DesignatedNode from "../View/DesignatedNode";
 import Dashboard  from "../View/Dashboard";
+import Scaleup from "../View/Scaleup";
 export const router=createBrowserRouter([
     {
     path:'/',
@@ -31,6 +32,10 @@ export const router=createBrowserRouter([
     {
         path: '/dashboard',
         element: <Dashboard/>
+    },
+    {
+        path: '/scaleup',
+        element: <Scaleup/>
     }
     ]
     },
