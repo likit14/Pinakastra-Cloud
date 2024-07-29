@@ -7,6 +7,7 @@ import NetworkScanner from "../View/NetworkScanner";
 import DesignatedNode from "../View/DesignatedNode";
 import Dashboard  from "../View/Dashboard";
 import Scaleup from "../View/Scaleup";
+import Scaledown from "../View/Scaledown";
 export const router=createBrowserRouter([
     {
     path:'/',
@@ -36,6 +37,10 @@ export const router=createBrowserRouter([
     {
         path: '/scaleup',
         element: <Scaleup/>
+    },
+    {
+        path: '/scaledown',
+        element: <Scaledown/>
     }
     ]
     },

@@ -190,7 +190,7 @@ const DataTable = () => {
                                 onClick={handleDeploy}
                                 disabled={selectedRows.length === 0}
                             >
-                                <strong>Next</strong>
+                                <strong>SCALE UP</strong>
                             </button>
                         </div>
                         <Sidebar />

@@ -43,7 +43,7 @@ def get_network_range(local_ip):
     network = ip_interface.network
     return network
 
-def truncate_os_name(os_name, max_length=20):
+def truncate_os_name(os_name, max_length=15):
     if len(os_name) > max_length:
         return os_name[:max_length] + '...'
     return os_name
@@ -71,7 +71,7 @@ def scan_network(network):
     arp_request = ARP(pdst=str(network))
     broadcast = Ether(dst="ff:ff:ff:ff:ff:ff")
     arp_request_broadcast = broadcast / arp_request
-    answered_list = srp(arp_request_broadcast, timeout=2, verbose=False)[0]
+    answered_list = srp(arp_request_broadcast, timeout=5, retry=3, verbose=False)[0]  # Increased timeout and retries
 
     active_nodes = []
     with concurrent.futures.ThreadPoolExecutor() as executor:

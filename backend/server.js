@@ -98,7 +98,7 @@ app.post('/register', async (req, res) => {
 Here are your registration details:
 
 - Company Name:  ${companyName}
-- User ID:                 ${id}
+- User ID:                ${id}
 
 We look forward to supporting your success!
 
