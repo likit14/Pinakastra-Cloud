@@ -8,9 +8,13 @@ import nmap
 import netifaces
 import subprocess
 import concurrent.futures
+import logging
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
+
+# Setup logging
+logging.basicConfig(level=logging.INFO)
 
 # Mapping detailed OS names to simpler labels
 os_mapping = {
@@ -48,6 +52,11 @@ def truncate_os_name(os_name, max_length=15):
         return os_name[:max_length] + '...'
     return os_name
 
+def truncate_hostname(hostname, max_length=15):
+    if len(hostname) > max_length:
+        return hostname[:max_length] + '...'
+    return hostname
+
 def get_os_type(ip):
     nm = nmap.PortScanner()
     try:
@@ -58,12 +67,13 @@ def get_os_type(ip):
             simplified_name = os_mapping.get(os_name, os_name)  # Use simplified label if available
             return truncate_os_name(simplified_name)  # Truncate if necessary
     except Exception as e:
-        print(f"Error scanning {ip}: {e}")
+        logging.error(f"Error scanning {ip}: {e}")
     return 'Unknown'
 
 def resolve_hostname(ip):
     try:
-        return socket.gethostbyaddr(ip)[0]
+        hostname = socket.gethostbyaddr(ip)[0]
+        return truncate_hostname(hostname)
     except socket.herror:
         return 'Unknown'
 
@@ -96,19 +106,24 @@ def scan_network(network):
 
 @app.route('/scan', methods=['GET', 'POST'])
 def scan_network_api():
+    logging.info("Received scan request")
     if request.method == 'POST':
         data = request.get_json()
         local_ip = data.get('local_ip')
 
         if not local_ip:
+            logging.error("Local IP address is required in the request body.")
             return jsonify({"error": "Local IP address is required in the request body."}), 400
     else:
         local_ip = get_local_network_ip()
         if not local_ip:
+            logging.error("Failed to retrieve local network IP address.")
             return jsonify({"error": "Failed to retrieve local network IP address."}), 500
 
     network = get_network_range(local_ip)
+    logging.info(f"Scanning network: {network}")
     active_nodes = scan_network(network)
+    logging.info(f"Active nodes found: {active_nodes}")
 
     return jsonify(active_nodes)
 

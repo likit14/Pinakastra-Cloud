@@ -46,7 +46,7 @@ const DeploymentOptions = () => {
           >
             <div className="option">
               <div className="option-content front">
-                <div className="option-text"><b>Standalone Cloud Setup</b></div>
+                <div className="option-text"><b>Single-node Setup</b></div>
               </div>
               <div className="option-content back">
                 <div className="option-text"><strong>A self-contained cloud infrastructure managed by a single node.</strong></div>
@@ -59,7 +59,7 @@ const DeploymentOptions = () => {
           >
             <div className="option">
               <div className="option-content front">
-                <div className="option-text"><b>Distributed Cloud Setup</b></div>
+                <div className="option-text"><b>Multi-node Setup</b></div>
               </div>
               <div className="option-content back">
                 <div className="option-text"><strong>A Distributed cloud setup across multiple nodes.</strong></div>
