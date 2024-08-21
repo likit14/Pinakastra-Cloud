@@ -99,7 +99,7 @@ const DataTable = () => {
     return (
         <div>
             <div className={styles.header}>
-                <button className="back-button" onClick={handleBack}>
+                <button className={styles["back-button"]} onClick={handleBack}>
                     <FontAwesomeIcon icon={faArrowLeft} size="2x" />
                 </button>
                 <center>
@@ -110,17 +110,15 @@ const DataTable = () => {
                     </h1>
                 </center>
             </div>
-            <div className='main'>
-                <div className="data-table-container">
-                    <div className="container">
+            <div className={styles.main}>
+                <div className={styles["data-table-container"]}>
+                    <div className={styles.container}>
                         <div>
-                            <table className="data-table">
+                            <table className={styles["data-table"]}>
                                 <thead>
                                     <tr>
-                                        <th>Sl<br />No.</th>
+                                        <th>Sl No.</th>
                                         <th>IP Address</th>
-                                        <th>Hostname</th>
-                                        <th>OSType</th>
                                         <th>Validate</th>
                                         <th>Validation<br />Result</th>
                                         <th>Info</th>
@@ -142,8 +140,6 @@ const DataTable = () => {
                                         <tr key={node.ip}>
                                             <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
                                             <td>{node.ip}</td>
-                                            <td>{node.hostname}</td>
-                                            <td>{node.os_type}</td>
                                             <td>
                                                 <button 
                                                     disabled={validatingNode !== null && validatingNode.ip === node.ip}
@@ -186,7 +182,7 @@ const DataTable = () => {
                                 ))}
                             </div>
                             <button
-                                className="next-button"
+                                className={styles["next-button"]}
                                 onClick={handleDeploy}
                                 disabled={selectedRows.length === 0}
                             >

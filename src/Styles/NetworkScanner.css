@@ -11,7 +11,7 @@
     align-items: center;
     padding-right: 15px;
     padding: 20px; /* Reduced padding */
-    margin-left: 14%;
+    margin-left: 11%;
     width: 80%; /* Adjust width */
     flex-direction: column; /* Added for DiscoveredMachines */
     height: 100%; /* Added for DiscoveredMachines */
@@ -42,14 +42,14 @@
 
 .data-table {
     width: 100%; /* Make table take full width of container */
-    max-width: 50%;
+    max-width: 100%;
     border-collapse: collapse;
     border: 1px solid #dddddd;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     background-color: #ffffff;
     margin-top: 20px;
     margin-top: -370px; /* Added for DiscoveredMachines */
-    margin-left: 100px; /* Added for DiscoveredMachines */
+    margin-left: 50px; /* Added for DiscoveredMachines */
 }
 
 .data-table th, .data-table td {
@@ -173,13 +173,14 @@
     display: flex;
     justify-content: center;
     margin-top: 20px;
+    margin-left: 75px;
 }
 
 .pagination button {
     padding: 8px 12px; /* Reduced padding */
     margin: 0 5px;
     background-color: #f2f2f2;
-    padding-left: 1%;
+    padding-left: 1.5%;
     border: 1px solid #dddddd;
     cursor: pointer;
     border-radius: 4px;

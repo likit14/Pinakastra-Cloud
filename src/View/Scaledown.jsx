@@ -84,7 +84,6 @@ const Scaledown = () => {
             <tr>
               <th>Sl No.</th>
               <th>IP Address</th>
-              <th>Hostname</th>
               <th>Roles</th>
             </tr>
           </thead>
@@ -93,7 +92,6 @@ const Scaledown = () => {
               <tr key={index}>
                 <td>{row.slNo}</td>
                 <td>{row.ipAddress}</td>
-                <td>{row.hostname}</td>
                 <td>
                   <div className={styles["checkbox-column"]}>
                     <label>

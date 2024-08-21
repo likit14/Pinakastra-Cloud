@@ -111,10 +111,8 @@ const DataTable = () => {
                             <table className="data-table">
                                 <thead>
                                     <tr>
-                                        <th>Sl<br />No.</th>
+                                        <th>Sl No.</th>
                                         <th>IP Address</th>
-                                        <th>Hostname</th>
-                                        <th>OSType</th>
                                         <th>Validate</th>
                                         <th>Validation<br />Result</th>
                                         <th>Info</th>
@@ -136,8 +134,6 @@ const DataTable = () => {
                                         <tr key={node.ip}>
                                             <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
                                             <td>{node.ip}</td>
-                                            <td>{node.hostname}</td>
-                                            <td>{node.os_type}</td>
                                             <td>
                                                 <button 
                                                     disabled={validatingNode !== null && validatingNode.ip === node.ip}

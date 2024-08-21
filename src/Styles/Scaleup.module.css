@@ -42,14 +42,14 @@
 
 .data-table {
     width: 100%; /* Make table take full width of container */
-    max-width: 50%;
+    max-width: 100%;
     border-collapse: collapse;
     border: 1px solid #dddddd;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     background-color: #ffffff;
     margin-top: 20px;
-    margin-top: -370px; /* Added for DiscoveredMachines */
-    margin-left: 100px; /* Added for DiscoveredMachines */
+    margin-top: -300px; /* Added for DiscoveredMachines */
+    margin-left: 0px; /* Added for DiscoveredMachines */
 }
 
 .data-table th, .data-table td {

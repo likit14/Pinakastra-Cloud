@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import img1 from '../Images/logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTachometerAlt, faArrowUp, faArrowDown, faUser, faSignOutAlt, faRocket } from '@fortawesome/free-solid-svg-icons';
+import { faTachometerAlt, faArrowUp, faArrowDown, faUser, faSignOutAlt, faRocket, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import '../Styles/Sidebar.css'; // Ensure to have Sidebar.css for styling
 
 const Sidebar = ({ children }) => {
@@ -59,13 +59,19 @@ const Sidebar = ({ children }) => {
           <li>
             <Link to="/scaleup">
               <FontAwesomeIcon icon={faArrowUp} />
-              <span className="menu-text">Scale Up</span>
+              <span className="menu-text">&nbsp;Scale Up</span>
             </Link>
           </li>
           <li>
             <Link to="/scaledown">
               <FontAwesomeIcon icon={faArrowDown} />
-              <span className="menu-text">Scale Down</span>
+              <span className="menu-text">&nbsp;Scale Down</span>
+            </Link>
+          </li>
+          <li>
+            <Link to="/cloudsiem">
+              <FontAwesomeIcon icon={faMagnifyingGlass} />
+              <span className="menu-text">&nbsp;SIEM</span>
             </Link>
           </li>
         </ul>

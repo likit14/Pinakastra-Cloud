@@ -1,36 +1,17 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-import socket
-import ipaddress
-from datetime import datetime
 from scapy.all import ARP, Ether, srp
-import nmap
+import ipaddress
 import netifaces
-import subprocess
 import concurrent.futures
 import logging
+from datetime import datetime
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
-
-# Mapping detailed OS names to simpler labels
-os_mapping = {
-    'Apple Mac OS X 10.7.0 (Lion) - 10.12 (Sierra) or iOS 4.1 - 9.3.3 (Darwin 10.0.0 - 16.4.0)': 'Apple',
-    'Apple OS X 10.11 (El Capitan) - 10.12 (Sierra) or iOS 10.1 - 10.2 (Darwin 15.4.0 - 16.6.0)': 'Apple',
-    'Linux 2.6.32 - 3.13': 'Linux',
-    'Linux 2.6.32': 'Linux',
-    'Linux 3.2 - 4.9': 'Linux', 
-    'Linux 4.15 - 5.6': 'Linux',
-    'FreeBSD 6.2-RELEASE': 'FreeBSD 6.2',
-    'Fortinet FortiGate 100D firewall': 'Fortinet 100D firewall',
-    'Cisco CP 8945 VoIP phone': 'Cisco8945 VoIP phone',
-    'Citrix Access Gateway VPN gateway': 'Citrix AccessGateway VPN',
-    'Apple OS X 10.11 (El Capitan) - 10.12 (Sierra) or iOS 10.1 - 10.2 (Darwin 15.4.0 - 16.6.0)': 'Apple'
-    # Add more mappings as needed
-}
 
 def get_local_network_ip():
     interfaces = netifaces.interfaces()
@@ -47,36 +28,6 @@ def get_network_range(local_ip):
     network = ip_interface.network
     return network
 
-def truncate_os_name(os_name, max_length=15):
-    if len(os_name) > max_length:
-        return os_name[:max_length] + '...'
-    return os_name
-
-def truncate_hostname(hostname, max_length=15):
-    if len(hostname) > max_length:
-        return hostname[:max_length] + '...'
-    return hostname
-
-def get_os_type(ip):
-    nm = nmap.PortScanner()
-    try:
-        nm.scan(ip, arguments='-O')  # OS detection
-        os_info = nm[ip].get('osmatch', [])
-        if os_info:
-            os_name = os_info[0]['name']
-            simplified_name = os_mapping.get(os_name, os_name)  # Use simplified label if available
-            return truncate_os_name(simplified_name)  # Truncate if necessary
-    except Exception as e:
-        logging.error(f"Error scanning {ip}: {e}")
-    return 'Unknown'
-
-def resolve_hostname(ip):
-    try:
-        hostname = socket.gethostbyaddr(ip)[0]
-        return truncate_hostname(hostname)
-    except socket.herror:
-        return 'Unknown'
-
 def scan_network(network):
     arp_request = ARP(pdst=str(network))
     broadcast = Ether(dst="ff:ff:ff:ff:ff:ff")
@@ -84,23 +35,13 @@ def scan_network(network):
     answered_list = srp(arp_request_broadcast, timeout=5, retry=3, verbose=False)[0]  # Increased timeout and retries
 
     active_nodes = []
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        futures = []
-        for sent, received in answered_list:
-            node_info = {
-                'ip': received.psrc,
-                'mac': received.hwsrc,
-                'last_seen': datetime.now().strftime('%Y-%m-%d')
-            }
-            futures.append(executor.submit(resolve_hostname, received.psrc))
-            futures.append(executor.submit(get_os_type, received.psrc))
-            active_nodes.append(node_info)
-
-        for i in range(0, len(futures), 2):
-            hostname_future = futures[i]
-            os_type_future = futures[i + 1]
-            active_nodes[i // 2]['hostname'] = hostname_future.result()
-            active_nodes[i // 2]['os_type'] = os_type_future.result()
+    for sent, received in answered_list:
+        node_info = {
+            'ip': received.psrc,
+            'mac': received.hwsrc,
+            'last_seen': datetime.now().strftime('%Y-%m-%d')
+        }
+        active_nodes.append(node_info)
 
     return active_nodes
 
