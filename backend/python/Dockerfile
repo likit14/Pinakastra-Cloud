@@ -4,12 +4,11 @@ FROM python:3.9-slim
 # Set the working directory in the container
 WORKDIR /app
 
-
-# Install system dependencies and nmap
+# Install system dependencies including net-tools for arp
 RUN apt-get update && \
-    apt-get install -y nmap && \
+    apt-get install -y net-tools && \
     rm -rf /var/lib/apt/lists/*  # Clean up apt cache
-    
+
 # Copy the requirements file into the container at /app
 COPY requirements.txt /app/
 
