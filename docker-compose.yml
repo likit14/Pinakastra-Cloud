@@ -28,7 +28,7 @@ services:
       - EMAIL_USER=pinakastra.join@gmail.com
       - EMAIL_PASS=sqei dbiv vxou ddsy
       - SESSION_SECRET=your-secret-key
-    entrypoint: ["/bin/sh", "-c", "./wait-for-mysql.sh mysql-db node server.js"]
+    entrypoint: ["/bin/sh", "-c", "./wait-for-it-script.sh mysql-db node server.js"]
     networks:
       - pinakastra-cloud_my-network
 
