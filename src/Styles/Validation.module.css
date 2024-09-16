@@ -241,3 +241,86 @@ body {
     margin-top: 10px;
     margin-left: -53px;
 }
+
+/* Updated CSS for smooth transition */
+
+.bmc-form {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    border-radius: 3%;
+    margin-left: 5%;
+    opacity: 0; /* Initially hidden */
+    visibility: hidden; /* Initially hidden */
+    transition: opacity 0.3s ease, visibility 0.3s ease; /* Smooth transition */
+  }
+  
+  .bmc-form.visible {
+    opacity: 1; /* Visible */
+    visibility: visible; /* Visible */
+  }
+  
+  .bmc-form h2 {
+    text-align: center;
+    margin-bottom: 10px;
+    padding: 7%;
+    font-size: 22px;
+  }
+  
+  .bmc-form form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .bmc-form label {
+    margin: 10px 0;
+    font-size: 15px;
+  }
+  
+  .bmc-form input {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #D3D3D3;
+    border-radius: 4px;
+    box-sizing: border-box;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .bmc-form input::placeholder {
+    color: #aaa;
+  }
+  
+  .bmc-form input:focus {
+    border-color: #2596be;
+    box-shadow: 0 0 5px rgba(37, 150, 190, 0.3);
+  }
+  
+  .bmc-form button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin: 4px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+  
+  .bmc-form button:hover {
+    background-color: #0056b3;
+  }
+  
+  .bmc-form .cancel-button {
+    background-color: #6c757d;
+  }
+  
+  .bmc-form .cancel-button:hover {
+    background-color: #5a6268;
+  }
+  

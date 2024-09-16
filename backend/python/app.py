@@ -6,6 +6,7 @@ import netifaces
 import concurrent.futures
 import logging
 from datetime import datetime
+import subprocess
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -71,20 +72,29 @@ def scan_network_api():
 @app.route('/set_pxe_boot', methods=['POST'])
 def set_pxe_boot():
     data = request.json
-    bmc_ip = data['ip']
-    bmc_username = data['username']
-    bmc_password = data['password']
-    role = data['role']
-    
+    bmc_ip = data.get('ip')
+    username = data.get('username')
+    password = data.get('password')
+
+    if not all([bmc_ip, username, password]):
+        return jsonify({'status': 'error', 'message': 'Missing BMC details'}), 400
+
     try:
-        result = subprocess.run(['python3', 'set_pxe_boot.py', bmc_ip, bmc_username, bmc_password, role],
-                                capture_output=True, text=True)
-        if result.returncode == 0:
-            return jsonify({"status": "success", "message": result.stdout})
-        else:
-            return jsonify({"status": "error", "message": result.stderr})
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)})
+        # Change boot order to PXE
+        subprocess.run([
+            'ipmitool', '-I', 'lanplus', '-H', bmc_ip, '-U', username, '-P', password,
+            'chassis', 'bootdev', 'pxe'
+        ], check=True)
+
+        # Restart the system
+        subprocess.run([
+            'ipmitool', '-I', 'lanplus', '-H', bmc_ip, '-U', username, '-P', password,
+            'chassis', 'power', 'reset'
+        ], check=True)
+
+        return jsonify({'status': 'success', 'message': 'Boot order changed to PXE and system restarted'}), 200
+    except subprocess.CalledProcessError as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000)

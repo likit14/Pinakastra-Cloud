@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios from 'axios'; // Import axios for API requests
 import Sidebar from '../Components/sidebar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
@@ -11,28 +11,35 @@ const Validation = () => {
     const [validationResults, setValidationResults] = useState({});
     const [validatingNode, setValidatingNode] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
+    const [bmcFormVisible, setBmcFormVisible] = useState(false);
+    const [currentNode, setCurrentNode] = useState(null);
+    const [bmcDetails, setBmcDetails] = useState({ ip: '', username: '', password: '' });
+    const [scanResults, setScanResults] = useState([]); // State to store scan results
+
     const itemsPerPage = 4;
     const navigate = useNavigate();
     const location = useLocation();
     const { selectedNodes } = location.state || { selectedNodes: [] };
 
-    const validateNode = async (node) => {
-        setValidatingNode(node);
+    useEffect(() => {
+        // Fetch initial scan results when the component mounts
+        fetchScanResults();
+    }, []);
+
+    const fetchScanResults = async () => {
         try {
-            const response = await axios.post('http://127.0.0.1:8000/validate', { ip: node.ip });
-            setValidationResults(prevResults => ({
-                ...prevResults,
-                [node.ip]: response.data
-            }));
+            const response = await axios.get('http://127.0.0.1:8000/scan');
+            setScanResults(response.data);
         } catch (error) {
-            console.error('Error validating node:', error);
-            setValidationResults(prevResults => ({
-                ...prevResults,
-                [node.ip]: { status: 'failure', message: 'Validation failed due to an error.' }
-            }));
-        } finally {
-            setValidatingNode(null);
+            console.error('Error fetching scan results:', error);
         }
+    };
+
+    const validateNode = (node) => {
+        setValidatingNode(node);
+        setCurrentNode(node);
+        setBmcDetails({ ...bmcDetails, ip: node.ip }); // Set the BMC IP to the current node's IP
+        setBmcFormVisible(true);
     };
 
     const handleBack = () => {
@@ -56,12 +63,29 @@ const Validation = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    const paginatedNodes = selectedNodes.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
+
+    const handleBmcFormSubmit = async (event) => {
+        event.preventDefault();
+        try {
+            const response = await axios.post('http://127.0.0.1:8000/set_pxe_boot', bmcDetails);
+            alert(response.data.message); // Show a success message or handle as needed
+        } catch (error) {
+            console.error('Error setting PXE boot:', error);
+            alert('Failed to set PXE boot. Please try again.');
+        }
+        setBmcFormVisible(false); // Hide the form after submission
+    };
+
+    const handleCancel = () => {
+        setBmcFormVisible(false); // Hide the form when canceled
+        setValidatingNode(null); // Reset validating node state
+    };
+
+    const paginatedNodes = selectedNodes.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
     return (
         <div>
@@ -103,7 +127,7 @@ const Validation = () => {
                                                         disabled={validatingNode !== null && validatingNode.ip === node.ip}
                                                         onClick={() => validateNode(node)}
                                                     >
-                                                        {validatingNode !== null && validatingNode.ip === node.ip ? 'Validating...' : 'Validate'}
+                                                        {validatingNode !== null && validatingNode.ip === node.ip ? 'Validating' : 'Validate'}
                                                     </button>
                                                 </td>
                                                 <td style={{ color: 'red', fontFamily: 'Arial, sans-serif' }}>
@@ -152,6 +176,52 @@ const Validation = () => {
                         <Sidebar />
                     </div>
                 </div>
+            </div>
+
+            {/* BMC Form */}
+            <div className={`${styles["bmc-form"]} ${bmcFormVisible ? styles.visible : ''}`}>
+                <h2><strong>Enter BMC Details for {currentNode?.ip}</strong></h2>
+                <form onSubmit={handleBmcFormSubmit}>
+                    <label>
+                        BMC IP Address:
+                        <input
+                            type="text"
+                            value={bmcDetails.ip}
+                            onChange={(e) =>
+                                setBmcDetails({ ...bmcDetails, ip: e.target.value })
+                            }
+                            required
+                        />
+                    </label>
+                    <label>
+                        BMC Username:
+                        <input
+                            type="text"
+                            value={bmcDetails.username}
+                            onChange={(e) =>
+                                setBmcDetails({ ...bmcDetails, username: e.target.value })
+                            }
+                            required
+                        />
+                    </label>
+                    <label>
+                        BMC Password:
+                        <input
+                            type="password"
+                            value={bmcDetails.password}
+                            onChange={(e) =>
+                                setBmcDetails({ ...bmcDetails, password: e.target.value })
+                            }
+                            required
+                        />
+                    </label>
+                    <div>
+                        <button type="submit">Submit</button>
+                        <button type="button" className={styles["cancel-button"]} onClick={handleCancel}>
+                            Cancel
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     );

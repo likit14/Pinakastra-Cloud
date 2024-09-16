@@ -9,6 +9,8 @@ RUN apt-get update && \
     apt-get install -y net-tools && \
     rm -rf /var/lib/apt/lists/*  # Clean up apt cache
 
+RUN apt-get update && apt-get install -y ipmitool
+
 # Copy the requirements file into the container at /app
 COPY requirements.txt /app/
 
