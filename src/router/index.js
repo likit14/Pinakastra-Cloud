@@ -8,6 +8,7 @@ import DesignatedNode from "../View/DesignatedNode";
 import Dashboard  from "../View/Dashboard";
 import Scaleup from "../View/Scaleup";
 import Scaledown from "../View/Scaledown";
+import Validation from "../View/Validation";
 export const router=createBrowserRouter([
     {
     path:'/',
@@ -23,8 +24,8 @@ export const router=createBrowserRouter([
         element: <NetworkScanner/>
     },
     {
-        path: '/designatednode',
-        element: <DesignatedNode/>
+        path: '/validation',
+        element: <Validation/>
     },
     {
         path: '/designatednode',

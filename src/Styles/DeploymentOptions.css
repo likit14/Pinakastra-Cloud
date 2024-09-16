@@ -13,7 +13,7 @@
 h1 {
   color: #333333; /* Dark text color */
   font-size: 2rem; /* Larger font size for heading */
-  margin-bottom: 60px; /* Space below heading */
+  margin-bottom: 75px; /* Space below heading */
   user-select: none; /* Standard syntax */
   -webkit-user-select: none; /* Safari */
   -moz-user-select: none; /* Firefox */

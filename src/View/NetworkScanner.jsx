@@ -43,25 +43,6 @@ const DataTable = () => {
         }
     };
 
-    const validateNode = async (node) => {
-        setValidatingNode(node);
-        try {
-            const response = await axios.post('http://127.0.0.1:8000/validate', { ip: node.ip });
-            setValidationResults(prevResults => ({
-                ...prevResults,
-                [node.ip]: response.data
-            }));
-        } catch (error) {
-            console.error('Error validating node:', error);
-            setValidationResults(prevResults => ({
-                ...prevResults,
-                [node.ip]: { status: 'failure', message: 'Validation failed due to an error.' }
-            }));
-        } finally {
-            setValidatingNode(null);
-        }
-    };
-
     const handleRefresh = () => {
         scanNetwork();
         setIsRotating(true);
@@ -71,7 +52,7 @@ const DataTable = () => {
     };
 
     const handleDeploy = () => {
-        navigate('/DesignatedNode', { state: { selectedNodes: selectedRows } });
+        navigate('/validation', { state: { selectedNodes: selectedRows } });
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
@@ -113,9 +94,6 @@ const DataTable = () => {
                                     <tr>
                                         <th>Sl No.</th>
                                         <th>IP Address</th>
-                                        <th>Validate</th>
-                                        <th>Validation<br />Result</th>
-                                        <th>Info</th>
                                         <th>Select</th>
                                     </tr>
                                 </thead>
@@ -134,22 +112,6 @@ const DataTable = () => {
                                         <tr key={node.ip}>
                                             <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
                                             <td>{node.ip}</td>
-                                            <td>
-                                                <button 
-                                                    disabled={validatingNode !== null && validatingNode.ip === node.ip}
-                                                    onClick={() => validateNode(node)}
-                                                >
-                                                    {validatingNode !== null && validatingNode.ip === node.ip ? 'Validating...' : 'Validate'}
-                                                </button>
-                                            </td>
-                                            <td style={{ color: 'red', fontFamily: 'Arial, sans-serif' }}>
-                                                {validationResults[node.ip] ? validationResults[node.ip].status : 'Not validated'}
-                                            </td>
-                                            <td>
-                                                {validationResults[node.ip] && validationResults[node.ip].status === 'failure' && (
-                                                    <button onClick={() => alert(validationResults[node.ip].message)}>Info</button>
-                                                )}
-                                            </td>
                                             <td className="checkbox-column">
                                                 <label className="checkbox-label">
                                                     <input
