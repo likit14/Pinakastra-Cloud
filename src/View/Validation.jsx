@@ -73,6 +73,7 @@ const Validation = () => {
         try {
             const response = await axios.post('http://127.0.0.1:8000/set_pxe_boot', bmcDetails);
             alert(response.data.message); // Show a success message or handle as needed
+            setBmcFormVisible(false); // Hide the form after successful submission
         } catch (error) {
             console.error('Error setting PXE boot:', error);
             alert('Failed to set PXE boot. Please try again.');

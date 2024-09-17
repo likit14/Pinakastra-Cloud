@@ -302,7 +302,7 @@ body {
   }
   
   .bmc-form button {
-    background-color: #007bff;
+    background-color: #2596be;
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -313,7 +313,7 @@ body {
   }
   
   .bmc-form button:hover {
-    background-color: #0056b3;
+    background-color: #2596be;
   }
   
   .bmc-form .cancel-button {
@@ -324,3 +324,17 @@ body {
     background-color: #5a6268;
   }
   
+/* Example CSS for loading symbol */
+.loadingSymbol {
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+    border-top: 3px solid #000;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
