@@ -5,6 +5,7 @@ import Sidebar from '../Components/sidebar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import styles from "../Styles/Validation.module.css";
+import StatusPopup from './StatusPopup'; // Import StatusPopup component
 
 const Validation = () => {
     const [selectedRows, setSelectedRows] = useState([]);
@@ -15,6 +16,8 @@ const Validation = () => {
     const [currentNode, setCurrentNode] = useState(null);
     const [bmcDetails, setBmcDetails] = useState({ ip: '', username: '', password: '' });
     const [scanResults, setScanResults] = useState([]); // State to store scan results
+    const [popupVisible, setPopupVisible] = useState(false);
+    const [popupMessages, setPopupMessages] = useState([]);
 
     const itemsPerPage = 4;
     const navigate = useNavigate();
@@ -72,18 +75,36 @@ const Validation = () => {
         event.preventDefault();
         try {
             const response = await axios.post('http://127.0.0.1:8000/set_pxe_boot', bmcDetails);
-            alert(response.data.message); // Show a success message or handle as needed
+            
+            // Update the validation result for the current node
+            setValidationResults(prevResults => ({
+                ...prevResults,
+                [currentNode.ip]: { status: 'success' }
+            }));
+    
+            const successMessage = { type: 'success', text: 'Enabled Network Boot' };
+            setPopupMessages([successMessage]);
+            setPopupVisible(true);
             setBmcFormVisible(false); // Hide the form after successful submission
         } catch (error) {
             console.error('Error setting PXE boot:', error);
-            alert('Failed to set PXE boot. Please try again.');
+            const errorMessage = { type: 'error', text: 'Failed to set PXE boot. Please try again.' };
+            setPopupMessages([errorMessage]);
+            setPopupVisible(true); // Show the popup on error
         }
-        setBmcFormVisible(false); // Hide the form after submission
     };
 
     const handleCancel = () => {
         setBmcFormVisible(false); // Hide the form when canceled
         setValidatingNode(null); // Reset validating node state
+    };
+
+    const handlePopupClose = () => {
+        setPopupVisible(false);
+    };
+
+    const handleInfoButtonClick = () => {
+        setPopupVisible(true); // Show popup with the same messages
     };
 
     const paginatedNodes = selectedNodes.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
@@ -135,8 +156,8 @@ const Validation = () => {
                                                     {validationResults[node.ip] ? validationResults[node.ip].status : 'Not validated'}
                                                 </td>
                                                 <td>
-                                                    {validationResults[node.ip] && validationResults[node.ip].status === 'failure' && (
-                                                        <button onClick={() => alert(validationResults[node.ip].message)}>Info</button>
+                                                    {validationResults[node.ip] && (
+                                                        <button onClick={handleInfoButtonClick}>Info</button>
                                                     )}
                                                 </td>
                                                 <td className={styles["checkbox-column"]}>
@@ -224,6 +245,13 @@ const Validation = () => {
                     </div>
                 </form>
             </div>
+
+            {/* Status Popup */}
+            <StatusPopup
+                isVisible={popupVisible}
+                statusMessages={popupMessages}
+                onClose={handlePopupClose}
+            />
         </div>
     );
 };
