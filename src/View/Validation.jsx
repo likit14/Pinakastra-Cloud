@@ -79,7 +79,7 @@ const Validation = () => {
             // Update the validation result for the current node
             setValidationResults(prevResults => ({
                 ...prevResults,
-                [currentNode.ip]: { status: 'success' }
+                [currentNode.ip]: { status: 'PXE Boot on Progress' }
             }));
     
             const successMessage = { type: 'success', text: 'Enabled Network Boot' };
