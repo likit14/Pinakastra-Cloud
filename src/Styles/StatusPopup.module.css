@@ -73,6 +73,16 @@ li {
     display: inline-block;
 }
 
+.error {
+    margin-right: 10px;
+    width: 20px; /* Adjust size as needed */
+    height: 20px; /* Adjust size as needed */
+    background-image: url('../Images/failure.png'); /* Path to your failure image */
+    background-size: contain; /* Ensure the image scales correctly */
+    background-repeat: no-repeat;
+    display: inline-block;
+}
+
 @keyframes tickAnimation {
     0% {
         opacity: 0;

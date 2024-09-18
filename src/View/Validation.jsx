@@ -18,6 +18,7 @@ const Validation = () => {
     const [scanResults, setScanResults] = useState([]); // State to store scan results
     const [popupVisible, setPopupVisible] = useState(false);
     const [popupMessages, setPopupMessages] = useState([]);
+    const [formSubmitted, setFormSubmitted] = useState(false); // State to track form submission
 
     const itemsPerPage = 4;
     const navigate = useNavigate();
@@ -75,22 +76,25 @@ const Validation = () => {
         event.preventDefault();
         try {
             const response = await axios.post('http://127.0.0.1:8000/set_pxe_boot', bmcDetails);
-            
+
             // Update the validation result for the current node
             setValidationResults(prevResults => ({
                 ...prevResults,
                 [currentNode.ip]: { status: 'PXE Boot on Progress' }
             }));
-    
+
             const successMessage = { type: 'success', text: 'Enabled Network Boot' };
             setPopupMessages([successMessage]);
             setPopupVisible(true);
             setBmcFormVisible(false); // Hide the form after successful submission
+            setFormSubmitted(true); // Set form submission status to true
         } catch (error) {
             console.error('Error setting PXE boot:', error);
             const errorMessage = { type: 'error', text: 'Failed to set PXE boot. Please try again.' };
             setPopupMessages([errorMessage]);
             setPopupVisible(true); // Show the popup on error
+            setBmcFormVisible(false); // Hide the form after successful submission
+            setFormSubmitted(true); // Set form submission status to true
         }
     };
 
@@ -145,7 +149,7 @@ const Validation = () => {
                                                 <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
                                                 <td>{node.ip}</td>
                                                 <td>
-                                                    <button 
+                                                    <button
                                                         disabled={validatingNode !== null && validatingNode.ip === node.ip}
                                                         onClick={() => validateNode(node)}
                                                     >
@@ -156,9 +160,9 @@ const Validation = () => {
                                                     {validationResults[node.ip] ? validationResults[node.ip].status : 'Not validated'}
                                                 </td>
                                                 <td>
-                                                    {validationResults[node.ip] && (
+                                                    {(validationResults[node.ip] || formSubmitted) ? (
                                                         <button onClick={handleInfoButtonClick}>Info</button>
-                                                    )}
+                                                    ) : null}
                                                 </td>
                                                 <td className={styles["checkbox-column"]}>
                                                     <label className={styles["checkbox-label"]}>
@@ -184,7 +188,7 @@ const Validation = () => {
                                         className={styles[currentPage === i + 1 ? 'active' : '']}
                                     >
                                         {i + 1}
-                                    </button>    
+                                    </button>
                                 ))}
                             </div>
                             <button
