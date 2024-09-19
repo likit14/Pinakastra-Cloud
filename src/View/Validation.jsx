@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import axios from 'axios'; // Import axios for API requests
+import axios from 'axios';
 import Sidebar from '../Components/sidebar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import styles from "../Styles/Validation.module.css";
-import StatusPopup from './StatusPopup'; // Import StatusPopup component
+import Swal from 'sweetalert2';
 
 const Validation = () => {
     const [selectedRows, setSelectedRows] = useState([]);
@@ -15,10 +15,8 @@ const Validation = () => {
     const [bmcFormVisible, setBmcFormVisible] = useState(false);
     const [currentNode, setCurrentNode] = useState(null);
     const [bmcDetails, setBmcDetails] = useState({ ip: '', username: '', password: '' });
-    const [scanResults, setScanResults] = useState([]); // State to store scan results
-    const [popupVisible, setPopupVisible] = useState(false);
-    const [popupMessages, setPopupMessages] = useState([]);
-    const [formSubmitted, setFormSubmitted] = useState(false); // State to track form submission
+    const [scanResults, setScanResults] = useState([]);
+    const [formSubmitted, setFormSubmitted] = useState(false);
 
     const itemsPerPage = 4;
     const navigate = useNavigate();
@@ -26,7 +24,6 @@ const Validation = () => {
     const { selectedNodes } = location.state || { selectedNodes: [] };
 
     useEffect(() => {
-        // Fetch initial scan results when the component mounts
         fetchScanResults();
     }, []);
 
@@ -42,7 +39,7 @@ const Validation = () => {
     const validateNode = (node) => {
         setValidatingNode(node);
         setCurrentNode(node);
-        setBmcDetails({ ...bmcDetails, ip: node.ip }); // Set the BMC IP to the current node's IP
+        setBmcDetails({ ...bmcDetails, ip: node.ip });
         setBmcFormVisible(true);
     };
 
@@ -77,38 +74,50 @@ const Validation = () => {
         try {
             const response = await axios.post('http://127.0.0.1:8000/set_pxe_boot', bmcDetails);
 
-            // Update the validation result for the current node
             setValidationResults(prevResults => ({
                 ...prevResults,
                 [currentNode.ip]: { status: 'PXE Boot on Progress' }
             }));
 
-            const successMessage = { type: 'success', text: 'Enabled Network Boot' };
-            setPopupMessages([successMessage]);
-            setPopupVisible(true);
-            setBmcFormVisible(false); // Hide the form after successful submission
-            setFormSubmitted(true); // Set form submission status to true
+            Swal.fire({
+                // icon: 'success',
+                title: 'Success',
+                text: 'Enabled Network Boot',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#28a745' // Custom button color
+            });
+
+            setBmcFormVisible(false);
+            setFormSubmitted(true);
         } catch (error) {
             console.error('Error setting PXE boot:', error);
-            const errorMessage = { type: 'error', text: 'Failed to set PXE boot. Please try again.' };
-            setPopupMessages([errorMessage]);
-            setPopupVisible(true); // Show the popup on error
-            setBmcFormVisible(false); // Hide the form after successful submission
-            setFormSubmitted(true); // Set form submission status to true
+
+            Swal.fire({
+                // icon: 'error',
+                title: 'Failed',
+                text: 'Failed to set PXE boot. Please try again.',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#dc3545' // Custom button color
+            });
+
+            setBmcFormVisible(false);
+            setFormSubmitted(true);
         }
     };
 
     const handleCancel = () => {
-        setBmcFormVisible(false); // Hide the form when canceled
-        setValidatingNode(null); // Reset validating node state
-    };
-
-    const handlePopupClose = () => {
-        setPopupVisible(false);
+        setBmcFormVisible(false);
+        setValidatingNode(null);
     };
 
     const handleInfoButtonClick = () => {
-        setPopupVisible(true); // Show popup with the same messages
+        Swal.fire({
+            title: 'Information',
+            text: formSubmitted ? 'PXE Boot status has been updated.' : 'No validation results yet.',
+            // icon: 'info'
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#17a2b8' // Custom button color for info
+        });
     };
 
     const paginatedNodes = selectedNodes.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
@@ -249,13 +258,6 @@ const Validation = () => {
                     </div>
                 </form>
             </div>
-
-            {/* Status Popup */}
-            <StatusPopup
-                isVisible={popupVisible}
-                statusMessages={popupMessages}
-                onClose={handlePopupClose}
-            />
         </div>
     );
 };
