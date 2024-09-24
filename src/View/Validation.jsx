@@ -73,39 +73,43 @@ const Validation = () => {
 
     const handleBmcFormSubmit = async (event) => {
         event.preventDefault();
-        const validationMemory=validationData.memory.replace("Gi","")
-        // if(validationData.cpu_cores>"4"&&validationMemory>"16"){
-            
-        // }
+    
         try {
             const response = await axios.post('http://127.0.0.1:8000/set_pxe_boot', bmcDetails);
-            console.log(bmcDetails)
+            console.log(bmcDetails);
+            
+            // Comparison logic
+            const comparisonResults = compareSpecs(validationData, requirementData);
+    
+            // Store results in validationResults
             setValidationResults(prevResults => ({
                 ...prevResults,
-                [currentNode.ip]: { status: 'PXE Boot on Progress' }
+                [currentNode.ip]: {
+                    status: 'PXE Boot on Progress',
+                    cpuCoresPassed: comparisonResults.cpuCoresPassed,
+                    memoryPassed: comparisonResults.memoryPassed
+                }
             }));
-            
+    
             Swal.fire({
-                // icon: 'success',
-                title: 'Success',
-                text: 'Enabled Network Boot',
+                title: 'Validation Done',
+                // text: 'Validation Done',
                 confirmButtonText: 'OK',
-                confirmButtonColor: '#28a745', // Custom button color
+                confirmButtonColor: '#28a745',
             });
-
+    
             setBmcFormVisible(false);
             setFormSubmitted(true);
         } catch (error) {
             console.error('Error setting PXE boot:', error);
-
+    
             Swal.fire({
-                // icon: 'error',
                 title: 'Failed',
                 text: 'Failed to set PXE boot. Please try again.',
                 confirmButtonText: 'OK',
-                confirmButtonColor: '#dc3545' // Custom button color
+                confirmButtonColor: '#dc3545'
             });
-
+    
             setBmcFormVisible(false);
             setFormSubmitted(true);
         }
@@ -117,8 +121,24 @@ const Validation = () => {
     };
 
     const handleInfoButtonClick = () => {
+        // Get the current validation result for the node
+        const result = validationResults[currentNode.ip];
+        
+        // Fetch min requirements and result values
+        const minCpuCores = requirementData.cpu_cores;
+        const minMemory = requirementData.memory;
+    
+        const validationCpuCores = validationData.cpu_cores;
+        const validationMemory = validationData.memory;
+    
+        // Determine heading color based on status
+        const headingColor = result.cpuCoresPassed && result.memoryPassed ? "#28a745" : "#dc3545";
+        
+        // Create HTML message with Min Req Value and Result Value
         const msg = `
-            <h1 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 20px; color: #28a745;">TEST RESULT: PASSED</h1>
+            <h1 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 20px; color: ${headingColor};">
+                TEST RESULT: ${result.cpuCoresPassed && result.memoryPassed ? "PASSED" : "FAILED"}
+            </h1>
             <div style="cursor: pointer; font-size: 1.1rem; color: #007bff; margin-bottom: 10px;" id="toggleReport">
                 Detailed Report <span id="arrow" style="font-size: 1.1rem;">▼</span>
             </div>
@@ -134,23 +154,19 @@ const Validation = () => {
                     <tbody>
                         <tr>
                             <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">CPU Cores</td>
-                            <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">4</td>
-                            <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">8</td>
+                            <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">${minCpuCores}</td>
+                            <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">${validationCpuCores}</td>
                         </tr>
                         <tr style="background-color: #f8f9fa;">
                             <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">RAM</td>
-                            <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">8 GB</td>
-                            <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">16 GB</td>
-                        </tr>
-                        <tr>
-                            <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">Disk Count</td>
-                            <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">2</td>
-                            <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">3</td>
+                            <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">${minMemory}</td>
+                            <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">${validationMemory}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>`;
-    
+        
+        // Display the Swal modal
         Swal.fire({
             confirmButtonText: 'OK',
             confirmButtonColor: '#17a2b8',
@@ -171,6 +187,18 @@ const Validation = () => {
                 });
             }
         });
+    };
+    const compareSpecs = (validationData, requirementData) => {
+        const validationMemory = parseInt(validationData.memory.replace(" Gi", ""));
+        const validationCpuCores = parseInt(validationData.cpu_cores);
+    
+        const minCpuCores = requirementData.cpu_cores;
+        const minMemory = parseInt(requirementData.memory.replace(" Gi", ""));
+    
+        return {
+            cpuCoresPassed: validationCpuCores >= minCpuCores,
+            memoryPassed: validationMemory >= minMemory
+        };
     };
     
     

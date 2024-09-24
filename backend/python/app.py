@@ -100,5 +100,6 @@ def set_pxe_boot():
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
 if __name__ == '__main__':
-    subprocess.Popen(['python3', 'script.py'])  # Run script.py in the background
+    # subprocess.Popen(['python3', 'script.py'])  # Run script.py in the background
+    # subprocess.Popen(['python3', 'app.py'])  # Run script.py in the background
     app.run(host='0.0.0.0', port=8000, threaded=True)
