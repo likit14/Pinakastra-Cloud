@@ -248,8 +248,8 @@ const Validation = () => {
                                         <th>Sl No.</th>
                                         <th>IP Address</th>
                                         <th>Validate</th>
-                                        <th>Validation Result</th>
-                                        <th>Info</th>
+                                        <th>Validation Status</th>
+                                        <th>Result</th>
                                         <th>Select</th>
                                     </tr>
                                 </thead>
