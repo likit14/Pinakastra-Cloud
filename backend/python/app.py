@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 from scapy.all import ARP, Ether, srp
 import ipaddress
@@ -7,18 +7,15 @@ import concurrent.futures
 import logging
 from datetime import datetime
 import subprocess
-import os
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
+@app.route('/')
+def home():
+    return "Flask app is running"
 # Setup logging
 logging.basicConfig(level=logging.INFO)
-
-# File upload configuration
-UPLOAD_FOLDER = '/home/HardwareDetails'
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 def get_local_network_ip():
     interfaces = netifaces.interfaces()
@@ -51,20 +48,6 @@ def scan_network(network):
         active_nodes.append(node_info)
 
     return active_nodes
-
-@app.route('/hardware-info', methods=['POST'])
-def upload_file():
-    if 'file' not in request.files:
-        return jsonify({'message': 'No file part'}), 400
-
-    file = request.files['file']
-    if file.filename == '':
-        return jsonify({'message': 'No selected file'}), 400
-
-    filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-    file.save(filepath)
-
-    return jsonify({'message': f'File {file.filename} uploaded successfully'}), 200
 
 @app.route('/scan', methods=['GET', 'POST'])
 def scan_network_api():
@@ -117,4 +100,5 @@ def set_pxe_boot():
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8000)
+    subprocess.Popen(['python3', 'script.py'])  # Run script.py in the background
+    app.run(host='0.0.0.0', port=8000, threaded=True)

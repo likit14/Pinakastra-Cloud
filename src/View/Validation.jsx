@@ -6,6 +6,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import styles from "../Styles/Validation.module.css";
 import Swal from 'sweetalert2';
+import validationData from '../Comparison/sample.json'
+import requirementData from '../Comparison/min_requirements.json'
 
 const Validation = () => {
     const [selectedRows, setSelectedRows] = useState([]);
@@ -71,20 +73,24 @@ const Validation = () => {
 
     const handleBmcFormSubmit = async (event) => {
         event.preventDefault();
+        const validationMemory=validationData.memory.replace("Gi","")
+        // if(validationData.cpu_cores>"4"&&validationMemory>"16"){
+            
+        // }
         try {
             const response = await axios.post('http://127.0.0.1:8000/set_pxe_boot', bmcDetails);
-
+            console.log(bmcDetails)
             setValidationResults(prevResults => ({
                 ...prevResults,
                 [currentNode.ip]: { status: 'PXE Boot on Progress' }
             }));
-
+            
             Swal.fire({
                 // icon: 'success',
                 title: 'Success',
                 text: 'Enabled Network Boot',
                 confirmButtonText: 'OK',
-                confirmButtonColor: '#28a745' // Custom button color
+                confirmButtonColor: '#28a745', // Custom button color
             });
 
             setBmcFormVisible(false);
@@ -111,15 +117,63 @@ const Validation = () => {
     };
 
     const handleInfoButtonClick = () => {
+        const msg = `
+            <h1 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 20px; color: #28a745;">TEST RESULT: PASSED</h1>
+            <div style="cursor: pointer; font-size: 1.1rem; color: #007bff; margin-bottom: 10px;" id="toggleReport">
+                Detailed Report <span id="arrow" style="font-size: 1.1rem;">▼</span>
+            </div>
+            <div id="reportWrapper" style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease;">
+                <table style="width:100%; border-collapse: collapse; margin-top: 10px; border-radius: 10px; overflow: hidden;">
+                    <thead style="background-color: #f8f9fa;">
+                        <tr>
+                            <th style="border: 1px solid #dee2e6; padding: 12px; text-align: left; font-size: 1rem;">PARAMETER</th>
+                            <th style="border: 1px solid #dee2e6; padding: 12px; text-align: left; font-size: 1rem;">Min Req Value</th>
+                            <th style="border: 1px solid #dee2e6; padding: 12px; text-align: left; font-size: 1rem;">Result Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">CPU Cores</td>
+                            <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">4</td>
+                            <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">8</td>
+                        </tr>
+                        <tr style="background-color: #f8f9fa;">
+                            <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">RAM</td>
+                            <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">8 GB</td>
+                            <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">16 GB</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">Disk Count</td>
+                            <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">2</td>
+                            <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">3</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>`;
+    
         Swal.fire({
-            title: 'Information',
-            text: formSubmitted ? 'PXE Boot status has been updated.' : 'No validation results yet.',
-            // icon: 'info'
             confirmButtonText: 'OK',
-            confirmButtonColor: '#17a2b8' // Custom button color for info
+            confirmButtonColor: '#17a2b8',
+            html: msg,
+            didRender: () => {
+                const toggleButton = document.getElementById('toggleReport');
+                const reportWrapper = document.getElementById('reportWrapper');
+                const arrow = document.getElementById('arrow');
+    
+                toggleButton.addEventListener('click', () => {
+                    if (reportWrapper.style.maxHeight === '0px') {
+                        reportWrapper.style.maxHeight = reportWrapper.scrollHeight + 'px';
+                        arrow.textContent = '▲';  // Change arrow to up arrow
+                    } else {
+                        reportWrapper.style.maxHeight = '0px';
+                        arrow.textContent = '▼';  // Change arrow to down arrow
+                    }
+                });
+            }
         });
     };
-
+    
+    
     const paginatedNodes = selectedNodes.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
     return (
