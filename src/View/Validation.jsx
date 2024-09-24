@@ -92,8 +92,8 @@ const Validation = () => {
             }));
     
             Swal.fire({
-                title: 'Validation Done',
-                // text: 'Validation Done',
+                title: 'Success',
+                text: 'Validation Done',
                 confirmButtonText: 'OK',
                 confirmButtonColor: '#28a745',
             });
@@ -121,9 +121,33 @@ const Validation = () => {
     };
 
     const handleInfoButtonClick = () => {
-        // Get the current validation result for the node
-        const result = validationResults[currentNode.ip];
-        
+           // Check if the validation results exist for the current node
+    if (!validationResults || !currentNode || !validationResults[currentNode.ip]) {
+        Swal.fire({
+            // icon: 'error',
+            title: 'Error',
+            text: 'Validation not done or BMC details are incorrect. Please check and try again.',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#dc3545'
+        });
+        return;
+    }
+
+    // Get the current validation result for the node
+    const result = validationResults[currentNode.ip];
+
+    // Check if the necessary validation data exists
+    if (!result || !result.cpuCoresPassed || !result.memoryPassed) {
+        Swal.fire({
+            // icon: 'error',
+            title: 'Error',
+            text: 'Validation data is missing or incomplete. Please ensure the validation is complete.',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#dc3545'
+        });
+        return;
+    }
+
         // Fetch min requirements and result values
         const minCpuCores = requirementData.cpu_cores;
         const minMemory = requirementData.memory;
