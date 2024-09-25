@@ -61,10 +61,10 @@ const Validation = () => {
         }
     };
 
-    const handleDeploy = () => {
-        navigate('/designatednode', { state: { selectedNodes: selectedRows } });
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
+    // const handleDeploy = () => {
+    //     navigate('/designatednode', { state: { selectedNodes: selectedRows } });
+    //     window.scrollTo({ top: 0, behavior: 'smooth' });
+    // };
 
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage);
@@ -73,43 +73,52 @@ const Validation = () => {
 
     const handleBmcFormSubmit = async (event) => {
         event.preventDefault();
-    
+
         try {
             const response = await axios.post('http://127.0.0.1:8000/set_pxe_boot', bmcDetails);
             console.log(bmcDetails);
-            
+
             // Comparison logic
             const comparisonResults = compareSpecs(validationData, requirementData);
-    
+
+            // Determine overall status
+            const overallStatus =
+                comparisonResults.cpuCoresPassed &&
+                    comparisonResults.memoryPassed &&
+                    comparisonResults.diskPassed &&
+                    comparisonResults.nicPassed ? 'Passed' : 'Failed';
+
             // Store results in validationResults
             setValidationResults(prevResults => ({
                 ...prevResults,
                 [currentNode.ip]: {
-                    status: 'PXE Boot on Progress',
+                    status: overallStatus,
                     cpuCoresPassed: comparisonResults.cpuCoresPassed,
-                    memoryPassed: comparisonResults.memoryPassed
+                    memoryPassed: comparisonResults.memoryPassed,
+                    diskPassed: comparisonResults.diskPassed,
+                    nicPassed: comparisonResults.nicPassed,
                 }
             }));
-    
+
             Swal.fire({
                 title: 'Success',
                 text: 'Validation Done',
                 confirmButtonText: 'OK',
                 confirmButtonColor: '#28a745',
             });
-    
+
             setBmcFormVisible(false);
             setFormSubmitted(true);
         } catch (error) {
             console.error('Error setting PXE boot:', error);
-    
+
             Swal.fire({
                 title: 'Failed',
                 text: 'Failed to set PXE boot. Please try again.',
                 confirmButtonText: 'OK',
                 confirmButtonColor: '#dc3545'
             });
-    
+
             setBmcFormVisible(false);
             setFormSubmitted(true);
         }
@@ -119,77 +128,78 @@ const Validation = () => {
         setBmcFormVisible(false);
         setValidatingNode(null);
     };
-
     const handleInfoButtonClick = () => {
-           // Check if the validation results exist for the current node
-    if (!validationResults || !currentNode || !validationResults[currentNode.ip]) {
-        Swal.fire({
-            // icon: 'error',
-            title: 'Error',
-            text: 'Validation not done or BMC details are incorrect. Please check and try again.',
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#dc3545'
-        });
-        return;
-    }
+        // Check if the validation results exist for the current node
+        if (!validationResults || !currentNode || !validationResults[currentNode.ip]) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Validation not done or BMC details are incorrect. Please check and try again.',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#dc3545'
+            });
+            return;
+        }
 
-    // Get the current validation result for the node
-    const result = validationResults[currentNode.ip];
-
-    // // Check if the necessary validation data exists
-    // if (!result || !result.cpuCoresPassed || !result.memoryPassed) {
-    //     Swal.fire({
-    //         // icon: 'error',
-    //         title: 'Error',
-    //         text: 'Validation data is missing or incomplete. Please ensure the validation is complete.',
-    //         confirmButtonText: 'OK',
-    //         confirmButtonColor: '#dc3545'
-    //     });
-    //     return;
-    // }
+        // Get the current validation result for the node
+        const result = validationResults[currentNode.ip];
 
         // Fetch min requirements and result values
         const minCpuCores = requirementData.cpu_cores;
-        const minMemory = requirementData.memory;
-    
-        const validationCpuCores = validationData.cpu_cores;
-        const validationMemory = validationData.memory;
-    
+        const minMemory = parseInt(requirementData.memory);
+        const minDiskCount = requirementData.disk_count; // Ensure this is a number
+        const minNic1GCount = requirementData.nic_1g_count; // Ensure this is a number
+
+        // Parse validation values
+        const validationCpuCores = parseInt(validationData.cpu_cores);
+        const validationMemory = parseInt(validationData.memory);
+        const validationDiskCount = parseInt(validationData.disk_count); // Convert to number
+        const validationNic1GCount = parseInt(validationData.nic_1g_count); // Convert to number
+
         // Determine heading color based on status
-        const headingColor = result.cpuCoresPassed && result.memoryPassed ? "#28a745" : "#dc3545";
-        
+        const headingColor = result.cpuCoresPassed && result.memoryPassed && result.diskPassed && result.nicPassed ? "#28a745" : "#dc3545";
+
         // Create HTML message with Min Req Value and Result Value
         const msg = `
-            <h1 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 20px; color: ${headingColor};">
-                TEST RESULT: ${result.cpuCoresPassed && result.memoryPassed ? "PASSED" : "FAILED"}
-            </h1>
-            <div style="cursor: pointer; font-size: 1.1rem; color: #007bff; margin-bottom: 10px;" id="toggleReport">
-                Detailed Report <span id="arrow" style="font-size: 1.1rem;">▼</span>
-            </div>
-            <div id="reportWrapper" style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease;">
-                <table style="width:100%; border-collapse: collapse; margin-top: 10px; border-radius: 10px; overflow: hidden;">
-                    <thead style="background-color: #f8f9fa;">
-                        <tr>
-                            <th style="border: 1px solid #dee2e6; padding: 12px; text-align: left; font-size: 1rem;">PARAMETER</th>
-                            <th style="border: 1px solid #dee2e6; padding: 12px; text-align: left; font-size: 1rem;">Min Req Value</th>
-                            <th style="border: 1px solid #dee2e6; padding: 12px; text-align: left; font-size: 1rem;">Result Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">CPU Cores</td>
-                            <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">${minCpuCores}</td>
-                            <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">${validationCpuCores}</td>
-                        </tr>
-                        <tr style="background-color: #f8f9fa;">
-                            <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">RAM</td>
-                            <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">${minMemory}</td>
-                            <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">${validationMemory}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>`;
-        
+        <h1 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 20px; color: ${headingColor};">
+            TEST RESULT: ${result.cpuCoresPassed && result.memoryPassed && result.diskPassed && result.nicPassed ? "PASSED" : "FAILED"}
+        </h1>
+        <div style="cursor: pointer; font-size: 1.1rem; color: #007bff; margin-bottom: 10px;" id="toggleReport">
+            Detailed Report <span id="arrow" style="font-size: 1.1rem;">▼</span>
+        </div>
+        <div id="reportWrapper" style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease;">
+            <table style="width:100%; border-collapse: collapse; margin-top: 10px; border-radius: 10px; overflow: hidden;">
+                <thead style="background-color: #f8f9fa;">
+                    <tr>
+                        <th style="border: 1px solid #dee2e6; padding: 12px; text-align: left; font-size: 1rem;">PARAMETER</th>
+                        <th style="border: 1px solid #dee2e6; padding: 12px; text-align: left; font-size: 1rem;">Min Req Value</th>
+                        <th style="border: 1px solid #dee2e6; padding: 12px; text-align: left; font-size: 1rem;">Result Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">CPU Cores</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">${minCpuCores}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">${validationCpuCores}</td>
+                    </tr>
+                    <tr style="background-color: #f8f9fa;">
+                        <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">RAM</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">${minMemory} GB</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">${validationMemory} GB</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">Disk Count</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">${minDiskCount}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">${validationDiskCount}</td>
+                    </tr>
+                    <tr style="background-color: #f8f9fa;">
+                        <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">NIC Count</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">${minNic1GCount}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px; text-align: left; font-size: 1rem;">${validationNic1GCount}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>`;
+
         // Display the Swal modal
         Swal.fire({
             confirmButtonText: 'OK',
@@ -199,7 +209,7 @@ const Validation = () => {
                 const toggleButton = document.getElementById('toggleReport');
                 const reportWrapper = document.getElementById('reportWrapper');
                 const arrow = document.getElementById('arrow');
-    
+
                 toggleButton.addEventListener('click', () => {
                     if (reportWrapper.style.maxHeight === '0px') {
                         reportWrapper.style.maxHeight = reportWrapper.scrollHeight + 'px';
@@ -212,20 +222,27 @@ const Validation = () => {
             }
         });
     };
+
     const compareSpecs = (validationData, requirementData) => {
         const validationMemory = parseInt(validationData.memory.replace(" Gi", ""));
         const validationCpuCores = parseInt(validationData.cpu_cores);
-    
+        const validationDiskCount = parseInt(validationData.disk_count);
+        const validationNic1GCount = parseInt(validationData.nic_1g_count);
+
         const minCpuCores = requirementData.cpu_cores;
         const minMemory = parseInt(requirementData.memory.replace(" Gi", ""));
-    
+        const minDiskCount = parseInt(requirementData.disk_count);
+        const minNic1GCount = requirementData.nic_1g_count;
+
         return {
             cpuCoresPassed: validationCpuCores >= minCpuCores,
-            memoryPassed: validationMemory >= minMemory
+            memoryPassed: validationMemory >= minMemory,
+            diskPassed: validationDiskCount >= minDiskCount,
+            nicPassed: validationNic1GCount >= minNic1GCount,
         };
     };
-    
-    
+
+
     const paginatedNodes = selectedNodes.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
     return (
@@ -248,9 +265,9 @@ const Validation = () => {
                                         <th>Sl No.</th>
                                         <th>IP Address</th>
                                         <th>Validate</th>
-                                        <th>Validation Status</th>
+                                        <th>Status</th>
                                         <th>Result</th>
-                                        <th>Select</th>
+                                        <th>DEPLOY</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -279,15 +296,21 @@ const Validation = () => {
                                                         <button onClick={handleInfoButtonClick}>Info</button>
                                                     ) : null}
                                                 </td>
-                                                <td className={styles["checkbox-column"]}>
-                                                    <label className={styles["checkbox-label"]}>
-                                                        <input
-                                                            type="checkbox"
-                                                            checked={selectedRows.some(row => row.ip === node.ip)}
-                                                            onChange={(event) => handleCheckboxChange(event, node)}
-                                                        />
-                                                        <span className={styles["checkbox-custom"]}></span>
-                                                    </label>
+                                                <td className={styles["deploy-column"]}>
+                                                    {validationResults[node.ip] && (
+                                                        <button
+                                                            className={styles["deploy-button"]}
+                                                            disabled={validationResults[node.ip].status !== 'Passed'} // Disable if not 'Passed'
+                                                            title={validationResults[node.ip].status !== 'Passed' ? "Sorry, you can't deploy!" : undefined} // Tooltip message when hovered
+                                                            style={{
+                                                                backgroundColor: validationResults[node.ip].status === 'Passed' ? '#28a745' : 'red', // Green for Passed, red for Failed
+                                                                color: 'white',
+                                                                cursor: validationResults[node.ip].status === 'Passed' ? 'pointer' : 'not-allowed'
+                                                            }}
+                                                        >
+                                                            Deploy
+                                                        </button>
+                                                    )}
                                                 </td>
                                             </tr>
                                         ))
@@ -306,13 +329,13 @@ const Validation = () => {
                                     </button>
                                 ))}
                             </div>
-                            <button
+                            {/* <button
                                 className="next-button"
                                 onClick={handleDeploy}
                                 disabled={selectedRows.length === 0}
                             >
                                 <strong>Next</strong>
-                            </button>
+                            </button> */}
                         </div>
                         <Sidebar />
                     </div>

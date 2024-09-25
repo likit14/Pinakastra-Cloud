@@ -55,7 +55,7 @@
 .data-table th, .data-table td {
     border: 1px solid #dddddd;
     padding: 8px; /* Reduced padding */
-    text-align: left;
+    text-align: center;
     padding: 19px; /* Added for DiscoveredMachines */
 }
 
@@ -177,7 +177,7 @@
     display: flex;
     justify-content: center;
     margin-top: 20px;
-    margin-left: 75px;
+    margin-left: 50px;
 }
 
 .pagination button {
