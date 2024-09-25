@@ -136,17 +136,17 @@ const Validation = () => {
     // Get the current validation result for the node
     const result = validationResults[currentNode.ip];
 
-    // Check if the necessary validation data exists
-    if (!result || !result.cpuCoresPassed || !result.memoryPassed) {
-        Swal.fire({
-            // icon: 'error',
-            title: 'Error',
-            text: 'Validation data is missing or incomplete. Please ensure the validation is complete.',
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#dc3545'
-        });
-        return;
-    }
+    // // Check if the necessary validation data exists
+    // if (!result || !result.cpuCoresPassed || !result.memoryPassed) {
+    //     Swal.fire({
+    //         // icon: 'error',
+    //         title: 'Error',
+    //         text: 'Validation data is missing or incomplete. Please ensure the validation is complete.',
+    //         confirmButtonText: 'OK',
+    //         confirmButtonColor: '#dc3545'
+    //     });
+    //     return;
+    // }
 
         // Fetch min requirements and result values
         const minCpuCores = requirementData.cpu_cores;
