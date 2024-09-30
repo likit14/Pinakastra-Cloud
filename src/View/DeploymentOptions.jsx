@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Navigate } from 'react-router-dom'; // Import Navigate for conditional navigation
 import Sidebar from '../Components/sidebar';
 import '../Styles/DeploymentOptions.css'; // Import the CSS file
-import Footer from '../Components/footer';
+// import Footer from '../Components/footer';
 
 const DeploymentOptions = () => {
   const [selectedOption, setSelectedOption] = useState(null);
@@ -72,7 +72,6 @@ const DeploymentOptions = () => {
         </button>
       </div>
       <Sidebar />
-      <Footer />
     </div>
   );
 };

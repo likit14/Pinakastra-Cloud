@@ -293,7 +293,19 @@ const Validation = () => {
                                                 </td>
                                                 <td>
                                                     {(validationResults[node.ip] || formSubmitted) ? (
-                                                        <button onClick={handleInfoButtonClick}>Info</button>
+                                                        <button
+                                                            onClick={handleInfoButtonClick}
+                                                            style={{
+                                                                backgroundColor: validationResults[node.ip]?.status === 'Passed' ? '#28a745' : '#dc3545', // Green for 'Passed', Red for 'Failed'
+                                                                color: 'white', // Text color to make it readable
+                                                                cursor: 'pointer', // To indicate the button is clickable
+                                                                border: 'none', // Optional: remove default border
+                                                                padding: '8px 12px', // Optional: for better button padding
+                                                                borderRadius: '4px' // Optional: to make the button corners rounded
+                                                            }}
+                                                        >
+                                                            Info
+                                                        </button>
                                                     ) : null}
                                                 </td>
                                                 <td className={styles["deploy-column"]}>
@@ -303,7 +315,7 @@ const Validation = () => {
                                                             disabled={validationResults[node.ip].status !== 'Passed'} // Disable if not 'Passed'
                                                             title={validationResults[node.ip].status !== 'Passed' ? "Sorry, you can't deploy!" : undefined} // Tooltip message when hovered
                                                             style={{
-                                                                backgroundColor: validationResults[node.ip].status === 'Passed' ? '#28a745' : 'red', // Green for Passed, red for Failed
+                                                                backgroundColor: validationResults[node.ip].status === 'Passed' ? '#28a745' : '#dc3545', // Green for Passed, red for Failed
                                                                 color: 'white',
                                                                 cursor: validationResults[node.ip].status === 'Passed' ? 'pointer' : 'not-allowed'
                                                             }}
