@@ -35,20 +35,16 @@ services:
   flask-backend:
     build:
       context: ./backend/python
-    ports:
-      - "8000:8000"
     depends_on:
       - mysql-db
-    networks:
-      - pinakastra-cloud_my-network
+    network_mode: host
       
   script-service:
     build:
-      context: ./script
+      context: ./backend/python/script
     depends_on:
       - mysql-db
-    networks:
-      - pinakastra-cloud_my-network
+    network_mode: host
 
   mysql-db:
     image: mysql:8.0
