@@ -42,7 +42,7 @@ services:
     networks:
       - pinakastra-cloud_my-network
       
-    script-service:
+  script-service:
     build:
       context: ./script
     depends_on:
