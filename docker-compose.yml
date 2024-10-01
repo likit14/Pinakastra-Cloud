@@ -44,6 +44,8 @@ services:
       context: ./backend/python/script
     depends_on:
       - mysql-db
+    volumes:
+      - /home/data:/home/data 
     network_mode: host
 
   mysql-db:
