@@ -41,6 +41,14 @@ services:
       - mysql-db
     networks:
       - pinakastra-cloud_my-network
+      
+    script-service:
+    build:
+      context: ./script
+    depends_on:
+      - mysql-db
+    networks:
+      - pinakastra-cloud_my-network
 
   mysql-db:
     image: mysql:8.0
