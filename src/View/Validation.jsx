@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import Sidebar from '../Components/sidebar';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
+import Sidebar from "../Components/sidebar";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import styles from "../Styles/Validation.module.css";
-import Swal from 'sweetalert2';
-import validationData from '../Comparison/sample.json'
-import requirementData from '../Comparison/min_requirements.json'
+import Swal from "sweetalert2";
+import validationData from "../Comparison/sample.json";
+import requirementData from "../Comparison/min_requirements.json";
 
 const Validation = () => {
     const [selectedRows, setSelectedRows] = useState([]);
@@ -16,7 +16,11 @@ const Validation = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [bmcFormVisible, setBmcFormVisible] = useState(false);
     const [currentNode, setCurrentNode] = useState(null);
-    const [bmcDetails, setBmcDetails] = useState({ ip: '', username: '', password: '' });
+    const [bmcDetails, setBmcDetails] = useState({
+        ip: "",
+        username: "",
+        password: "",
+    });
     const [scanResults, setScanResults] = useState([]);
     const [formSubmitted, setFormSubmitted] = useState(false);
 
@@ -31,10 +35,10 @@ const Validation = () => {
 
     const fetchScanResults = async () => {
         try {
-            const response = await axios.get('http://127.0.0.1:8000/scan');
+            const response = await axios.get("http://127.0.0.1:8000/scan");
             setScanResults(response.data);
         } catch (error) {
-            console.error('Error fetching scan results:', error);
+            console.error("Error fetching scan results:", error);
         }
     };
 
@@ -48,7 +52,7 @@ const Validation = () => {
     const handleBack = () => {
         navigate(-1);
         setTimeout(() => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.scrollTo({ top: 0, behavior: "smooth" });
         }, 100);
     };
 
@@ -57,7 +61,9 @@ const Validation = () => {
         if (isChecked) {
             setSelectedRows([...selectedRows, node]);
         } else {
-            setSelectedRows(selectedRows.filter(selectedRow => selectedRow.ip !== node.ip));
+            setSelectedRows(
+                selectedRows.filter((selectedRow) => selectedRow.ip !== node.ip)
+            );
         }
     };
 
@@ -68,14 +74,17 @@ const Validation = () => {
 
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
     const handleBmcFormSubmit = async (event) => {
         event.preventDefault();
 
         try {
-            const response = await axios.post('http://127.0.0.1:8000/set_pxe_boot', bmcDetails);
+            const response = await axios.post(
+                "http://127.0.0.1:8000/set_pxe_boot",
+                bmcDetails
+            );
             console.log(bmcDetails);
 
             // Comparison logic
@@ -86,10 +95,12 @@ const Validation = () => {
                 comparisonResults.cpuCoresPassed &&
                     comparisonResults.memoryPassed &&
                     comparisonResults.diskPassed &&
-                    comparisonResults.nicPassed ? 'Passed' : 'Failed';
+                    comparisonResults.nicPassed
+                    ? "Passed"
+                    : "Failed";
 
             // Store results in validationResults
-            setValidationResults(prevResults => ({
+            setValidationResults((prevResults) => ({
                 ...prevResults,
                 [currentNode.ip]: {
                     status: overallStatus,
@@ -97,26 +108,26 @@ const Validation = () => {
                     memoryPassed: comparisonResults.memoryPassed,
                     diskPassed: comparisonResults.diskPassed,
                     nicPassed: comparisonResults.nicPassed,
-                }
+                },
             }));
 
             Swal.fire({
-                title: 'Success',
-                text: 'Validation Done',
-                confirmButtonText: 'OK',
-                confirmButtonColor: '#28a745',
+                title: "Success",
+                text: "Validation Done",
+                confirmButtonText: "OK",
+                confirmButtonColor: "#28a745",
             });
 
             setBmcFormVisible(false);
             setFormSubmitted(true);
         } catch (error) {
-            console.error('Error setting PXE boot:', error);
+            console.error("Error setting PXE boot:", error);
 
             Swal.fire({
-                title: 'Failed',
-                text: 'Failed to set PXE boot. Please try again.',
-                confirmButtonText: 'OK',
-                confirmButtonColor: '#dc3545'
+                title: "Failed",
+                text: "Failed to set PXE boot. Please try again.",
+                confirmButtonText: "OK",
+                confirmButtonColor: "#dc3545",
             });
 
             setBmcFormVisible(false);
@@ -130,12 +141,16 @@ const Validation = () => {
     };
     const handleInfoButtonClick = () => {
         // Check if the validation results exist for the current node
-        if (!validationResults || !currentNode || !validationResults[currentNode.ip]) {
+        if (
+            !validationResults ||
+            !currentNode ||
+            !validationResults[currentNode.ip]
+        ) {
             Swal.fire({
-                title: 'Error',
-                text: 'Validation not done or BMC details are incorrect. Please check and try again.',
-                confirmButtonText: 'OK',
-                confirmButtonColor: '#dc3545'
+                title: "Error",
+                text: "Validation not done or BMC details are incorrect. Please check and try again.",
+                confirmButtonText: "OK",
+                confirmButtonColor: "#dc3545",
             });
             return;
         }
@@ -156,12 +171,24 @@ const Validation = () => {
         const validationNic1GCount = parseInt(validationData.nic_1g_count); // Convert to number
 
         // Determine heading color based on status
-        const headingColor = result.cpuCoresPassed && result.memoryPassed && result.diskPassed && result.nicPassed ? "#28a745" : "#dc3545";
+        const headingColor =
+            result.cpuCoresPassed &&
+                result.memoryPassed &&
+                result.diskPassed &&
+                result.nicPassed
+                ? "#28a745"
+                : "#dc3545";
 
         // Create HTML message with Min Req Value and Result Value
         const msg = `
         <h1 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 20px; color: ${headingColor};">
-            TEST RESULT: ${result.cpuCoresPassed && result.memoryPassed && result.diskPassed && result.nicPassed ? "PASSED" : "FAILED"}
+            TEST RESULT: ${result.cpuCoresPassed &&
+                result.memoryPassed &&
+                result.diskPassed &&
+                result.nicPassed
+                ? "PASSED"
+                : "FAILED"
+            }
         </h1>
         <div style="cursor: pointer; font-size: 1.1rem; color: #007bff; margin-bottom: 10px;" id="toggleReport">
             Detailed Report <span id="arrow" style="font-size: 1.1rem;">▼</span>
@@ -202,24 +229,24 @@ const Validation = () => {
 
         // Display the Swal modal
         Swal.fire({
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#17a2b8',
+            confirmButtonText: "OK",
+            confirmButtonColor: "#17a2b8",
             html: msg,
             didRender: () => {
-                const toggleButton = document.getElementById('toggleReport');
-                const reportWrapper = document.getElementById('reportWrapper');
-                const arrow = document.getElementById('arrow');
+                const toggleButton = document.getElementById("toggleReport");
+                const reportWrapper = document.getElementById("reportWrapper");
+                const arrow = document.getElementById("arrow");
 
-                toggleButton.addEventListener('click', () => {
-                    if (reportWrapper.style.maxHeight === '0px') {
-                        reportWrapper.style.maxHeight = reportWrapper.scrollHeight + 'px';
-                        arrow.textContent = '▲';  // Change arrow to up arrow
+                toggleButton.addEventListener("click", () => {
+                    if (reportWrapper.style.maxHeight === "0px") {
+                        reportWrapper.style.maxHeight = reportWrapper.scrollHeight + "px";
+                        arrow.textContent = "▲"; // Change arrow to up arrow
                     } else {
-                        reportWrapper.style.maxHeight = '0px';
-                        arrow.textContent = '▼';  // Change arrow to down arrow
+                        reportWrapper.style.maxHeight = "0px";
+                        arrow.textContent = "▼"; // Change arrow to down arrow
                     }
                 });
-            }
+            },
         });
     };
 
@@ -241,9 +268,78 @@ const Validation = () => {
             nicPassed: validationNic1GCount >= minNic1GCount,
         };
     };
+    const handleDeployClick = (ip) => {
+        Swal.fire({
+            title: "Management Network",
+            width: "60%",
+            html: `
+                <div style="display: flex; justify-content: space-between; font-size: 1.2rem; padding: 10px; margin-top: 20px;">
+             <div style="display: flex; flex-direction: column; align-items: center;">
+        <div style="display: flex; align-items: center;">
+            <span style="margin-left: 50px; font-weight: bold;">IP/CIDR</span>
+        </div>
+        <div style="display: flex; align-items: center; margin-top: 10px;">
+            <span style="margin-right: 5px; color: red;">*</span>           
+            <span style="margin-right: 10px; font-weight: bold;">OOB&nbsp;&nbsp;</span>
+            <input type="text" placeholder="Enter IP/CIDR" 
+                style="padding: 8px; border-radius: 5px; 
+                       border: 1px solid #ccc; width: 120px;">
+        </div>
+        <div style="display: flex; align-items: center; margin-top: 10px;">
+            <span style="margin-right: 5px; color: red;">*</span>           
+            <span style="margin-right: 5px; font-weight: bold; margin-left: 0;">Mgmt IP</span>
+            <input type="text" placeholder="Enter Mgmt IP" 
+                style="padding: 8px; border-radius: 5px; 
+                       border: 1px solid #ccc; width: 120px;">
+        </div>
+        <div style="margin-top: 10px;"></div>
+    </div>
+    <div style="display: flex; flex-direction: column; align-items: center;">
+        <span style="font-weight: bold;">VLAN ID</span>
+        <input type="text" placeholder="Enter VLAN ID" 
+            style="margin-top: 10px; padding: 8px; border-radius: 5px; 
+                   border: 1px solid #ccc; width: 120px;">
+    </div>
+    <div style="display: flex; flex-direction: column; align-items: center;">
+        <span style="font-weight: bold;">BOND</span>
+        <input type="checkbox" style="margin-top: 19px; width: 16px; height: 16px;">
+    </div>
+    <div style="display: flex; flex-direction: column; align-items: center;">
+        <span style="font-weight: bold;">INTERFACE</span>
+        <div style="margin-top: 10px; ">
+            <select style="padding: 8px; border-radius: 5px; 
+                           border: 1px solid #ccc; width: 120px; font-size: 0.8rem; height: 35px">
+                <option value="" disabled selected>Select</option>
+                <option value="eth0">eth0</option>
+                <option value="eth1">eth1</option>
+                <option value="wlan0">wlan0</option>
+                <option value="lo">(lo)</option>
+                <option value="docker0">docker0</option>
+            </select>
+        </div>
+        <div style="margin-top: 10px;">
+            <select style="padding: 8px; border-radius: 5px; 
+                           border: 1px solid #ccc; width: 120px; font-size: 0.8rem; height: 35px">
+                <option value="" disabled selected>Select</option>
+                <option value="eth0">eth0</option>
+                <option value="eth1">eth1</option>
+                <option value="wlan0">wlan0</option>
+                <option value="lo">(lo)</option>
+                <option value="docker0">docker0</option>
+            </select>
+        </div>
+             </div>
+                </div>
+            `,
+            confirmButtonText: "BOOT",
+            confirmButtonColor: "#28a745",
+        });
+    };
 
-
-    const paginatedNodes = selectedNodes.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    const paginatedNodes = selectedNodes.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
 
     return (
         <div>
@@ -273,7 +369,9 @@ const Validation = () => {
                                 <tbody>
                                     {selectedNodes.length === 0 ? (
                                         <tr>
-                                            <td colSpan="6" className={styles["no-device-message"]}><center>No devices selected</center></td>
+                                            <td colSpan="6" className={styles["no-device-message"]}>
+                                                <center>No devices selected</center>
+                                            </td>
                                         </tr>
                                     ) : (
                                         paginatedNodes.map((node, index) => (
@@ -282,26 +380,43 @@ const Validation = () => {
                                                 <td>{node.ip}</td>
                                                 <td>
                                                     <button
-                                                        disabled={validatingNode !== null && validatingNode.ip === node.ip}
+                                                        disabled={
+                                                            validatingNode !== null &&
+                                                            validatingNode.ip === node.ip
+                                                        }
                                                         onClick={() => validateNode(node)}
                                                     >
-                                                        {validatingNode !== null && validatingNode.ip === node.ip ? 'Validated' : 'Validate'}
+                                                        {validatingNode !== null &&
+                                                            validatingNode.ip === node.ip
+                                                            ? "Validated"
+                                                            : "Validate"}
                                                     </button>
                                                 </td>
-                                                <td style={{ color: 'red', fontFamily: 'Arial, sans-serif' }}>
-                                                    {validationResults[node.ip] ? validationResults[node.ip].status : 'Not validated'}
+                                                <td
+                                                    style={{
+                                                        color: "red",
+                                                        fontFamily: "Arial, sans-serif",
+                                                    }}
+                                                >
+                                                    {validationResults[node.ip]
+                                                        ? validationResults[node.ip].status
+                                                        : "Not validated"}
                                                 </td>
                                                 <td>
-                                                    {(validationResults[node.ip] || formSubmitted) ? (
+                                                    {validationResults[node.ip] || formSubmitted ? (
                                                         <button
                                                             onClick={handleInfoButtonClick}
                                                             style={{
-                                                                backgroundColor: validationResults[node.ip]?.status === 'Passed' ? '#28a745' : '#dc3545', // Green for 'Passed', Red for 'Failed'
-                                                                color: 'white', // Text color to make it readable
-                                                                cursor: 'pointer', // To indicate the button is clickable
-                                                                border: 'none', // Optional: remove default border
-                                                                padding: '8px 12px', // Optional: for better button padding
-                                                                borderRadius: '4px' // Optional: to make the button corners rounded
+                                                                backgroundColor:
+                                                                    validationResults[node.ip]?.status ===
+                                                                        "Passed"
+                                                                        ? "#28a745"
+                                                                        : "#dc3545", // Green for 'Passed', Red for 'Failed'
+                                                                color: "white", // Text color to make it readable
+                                                                cursor: "pointer", // To indicate the button is clickable
+                                                                border: "none", // Optional: remove default border
+                                                                padding: "8px 12px", // Optional: for better button padding
+                                                                borderRadius: "4px", // Optional: to make the button corners rounded
                                                             }}
                                                         >
                                                             Info
@@ -312,13 +427,26 @@ const Validation = () => {
                                                     {validationResults[node.ip] && (
                                                         <button
                                                             className={styles["deploy-button"]}
-                                                            disabled={validationResults[node.ip].status !== 'Passed'} // Disable if not 'Passed'
-                                                            title={validationResults[node.ip].status !== 'Passed' ? "Sorry, you can't deploy!" : undefined} // Tooltip message when hovered
+                                                            disabled={
+                                                                validationResults[node.ip].status !== "Passed"
+                                                            } // Disable if not 'Passed'
+                                                            title={
+                                                                validationResults[node.ip].status !== "Passed"
+                                                                    ? "Sorry, you can't deploy!"
+                                                                    : undefined
+                                                            } // Tooltip message when hovered
                                                             style={{
-                                                                backgroundColor: validationResults[node.ip].status === 'Passed' ? '#28a745' : '#dc3545', // Green for Passed, red for Failed
-                                                                color: 'white',
-                                                                cursor: validationResults[node.ip].status === 'Passed' ? 'pointer' : 'not-allowed'
+                                                                backgroundColor:
+                                                                    validationResults[node.ip].status === "Passed"
+                                                                        ? "#28a745"
+                                                                        : "#dc3545", // Green for Passed, red for Failed
+                                                                color: "white",
+                                                                cursor:
+                                                                    validationResults[node.ip].status === "Passed"
+                                                                        ? "pointer"
+                                                                        : "not-allowed",
                                                             }}
+                                                            onClick={() => handleDeployClick(node.ip)} // Call handleDeployClick on button click
                                                         >
                                                             Deploy
                                                         </button>
@@ -331,15 +459,18 @@ const Validation = () => {
                             </table>
 
                             <div className={styles.pagination}>
-                                {Array.from({ length: Math.ceil(selectedNodes.length / itemsPerPage) }, (_, i) => (
-                                    <button
-                                        key={i}
-                                        onClick={() => handlePageChange(i + 1)}
-                                        className={styles[currentPage === i + 1 ? 'active' : '']}
-                                    >
-                                        {i + 1}
-                                    </button>
-                                ))}
+                                {Array.from(
+                                    { length: Math.ceil(selectedNodes.length / itemsPerPage) },
+                                    (_, i) => (
+                                        <button
+                                            key={i}
+                                            onClick={() => handlePageChange(i + 1)}
+                                            className={styles[currentPage === i + 1 ? "active" : ""]}
+                                        >
+                                            {i + 1}
+                                        </button>
+                                    )
+                                )}
                             </div>
                             {/* <button
                                 className="next-button"
@@ -355,8 +486,13 @@ const Validation = () => {
             </div>
 
             {/* BMC Form */}
-            <div className={`${styles["bmc-form"]} ${bmcFormVisible ? styles.visible : ''}`}>
-                <h2><strong>Enter BMC Details for {currentNode?.ip}</strong></h2>
+            <div
+                className={`${styles["bmc-form"]} ${bmcFormVisible ? styles.visible : ""
+                    }`}
+            >
+                <h2>
+                    <strong>Enter BMC Details for {currentNode?.ip}</strong>
+                </h2>
                 <form onSubmit={handleBmcFormSubmit}>
                     <label>
                         BMC IP Address:
@@ -393,7 +529,11 @@ const Validation = () => {
                     </label>
                     <div>
                         <button type="submit">Submit</button>
-                        <button type="button" className={styles["cancel-button"]} onClick={handleCancel}>
+                        <button
+                            type="button"
+                            className={styles["cancel-button"]}
+                            onClick={handleCancel}
+                        >
                             Cancel
                         </button>
                     </div>
