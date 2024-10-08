@@ -280,7 +280,7 @@ const Validation = () => {
         </div>
         <div style="display: flex; align-items: center; margin-top: 10px;">
             <span style="margin-right: 5px; color: red;">*</span>           
-            <span style="margin-right: 10px; font-weight: bold;">OOB&nbsp;&nbsp;</span>
+            <span style="margin-right: 10px; font-weight: bold;">OOB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
             <input type="text" placeholder="Enter IP/CIDR" 
                 style="padding: 8px; border-radius: 5px; 
                        border: 1px solid #ccc; width: 120px;">
@@ -288,6 +288,17 @@ const Validation = () => {
         <div style="display: flex; align-items: center; margin-top: 10px;">
             <span style="margin-right: 5px; color: red;">*</span>           
             <span style="margin-right: 5px; font-weight: bold; margin-left: 0;">Mgmt IP</span>
+            <input type="text" placeholder="Enter Mgmt IP" 
+                style="padding: 8px; border-radius: 5px; 
+                       border: 1px solid #ccc; width: 120px;">
+        </div>
+                <div style="display: flex; align-items: center; margin-top: 10px; margin-left: -150px;">
+                    <span style="margin-right: 5px; color: red;">*</span>           
+                    <span style="margin-right: 5px; font-weight: bold;">VLAN&nbsp;&nbsp;</span>
+                </div>
+                        <div style="display: flex; align-items: center; margin-top: 10px;">
+            <span style="margin-right: 5px; color: red;">*</span>           
+            <span style="margin-right: 5px; font-weight: bold; margin-left: 0;">Provider NW</span>
             <input type="text" placeholder="Enter Mgmt IP" 
                 style="padding: 8px; border-radius: 5px; 
                        border: 1px solid #ccc; width: 120px;">
@@ -308,7 +319,7 @@ const Validation = () => {
         <span style="font-weight: bold;">INTERFACE</span>
         <div style="margin-top: 10px; ">
             <select style="padding: 8px; border-radius: 5px; 
-                           border: 1px solid #ccc; width: 120px; font-size: 0.8rem; height: 35px">
+                           border: 1px solid #ccc; width: 120px; font-size: 0.8rem; height: 32px">
                 <option value="" disabled selected>Select</option>
                 <option value="eth0">eth0</option>
                 <option value="eth1">eth1</option>
@@ -319,7 +330,18 @@ const Validation = () => {
         </div>
         <div style="margin-top: 10px;">
             <select style="padding: 8px; border-radius: 5px; 
-                           border: 1px solid #ccc; width: 120px; font-size: 0.8rem; height: 35px">
+                           border: 1px solid #ccc; width: 120px; font-size: 0.8rem; height: 32px">
+                <option value="" disabled selected>Select</option>
+                <option value="eth0">eth0</option>
+                <option value="eth1">eth1</option>
+                <option value="wlan0">wlan0</option>
+                <option value="lo">(lo)</option>
+                <option value="docker0">docker0</option>
+            </select>
+        </div>
+        <div style="margin-top: 10px;">
+            <select style="padding: 8px; border-radius: 5px; 
+                           border: 1px solid #ccc; width: 120px; font-size: 0.8rem; height: 32px">
                 <option value="" disabled selected>Select</option>
                 <option value="eth0">eth0</option>
                 <option value="eth1">eth1</option>
